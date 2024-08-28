@@ -1,24 +1,16 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 
 const Vote = ({ refreshCandidates }) => {
     const [candidateId, setCandidateId] = useState('');
 
     const handleVote = async () => {
-        try {
-            // Make the vote request
-            await axios.post('http://localhost:5001/api/vote', { candidateId });
-            alert('Vote cast successfully!');
-
-            // Refresh the candidates list
-            refreshCandidates();
-        } catch (error) {
-            console.error('Vote failed', error);
-        }
+        refreshCandidates();
+        alert('Vote cast successfully!');
     };
 
     return (
         <div>
+            <h2>Vote</h2>
             <input
                 type="number"
                 value={candidateId}

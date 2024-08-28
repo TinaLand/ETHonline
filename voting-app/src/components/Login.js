@@ -1,26 +1,20 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 
 const Login = ({ setToken }) => {
     const [address, setAddress] = useState('');
 
-    const handleLogin = async () => {
-        try {
-            // Fake login: Any input will result in a dummy token
-            const response = await axios.post('http://localhost:5001/api/login', { address });
-            setToken(response.data.token); // Set the dummy token
-        } catch (error) {
-            console.error('Login failed', error);
-        }
+    const handleLogin = () => {
+        setToken('dummyToken'); // Set a dummy token to simulate login
     };
 
     return (
         <div>
+            <h2>Login</h2>
             <input
                 type="text"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                placeholder="Enter any address"
+                placeholder="Enter your address"
             />
             <button onClick={handleLogin}>Login</button>
         </div>

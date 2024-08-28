@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
+import './styles.css'; // Import the global stylesheet
 import Login from './components/Login';
 import Vote from './components/Vote';
 import Candidates from './components/Candidates';
 
 const App = () => {
     const [token, setToken] = useState('');
-    const [refresh, setRefresh] = useState(0); // State to trigger refresh
+    const [refresh, setRefresh] = useState(0);
 
     const refreshCandidates = () => {
-        setRefresh(prev => prev + 1); // Update refresh state to trigger re-fetch
+        setRefresh(prev => prev + 1);
     };
 
     return (
-        <div>
+        <div className="container">
             {!token ? (
                 <Login setToken={setToken} />
             ) : (

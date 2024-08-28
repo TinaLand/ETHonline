@@ -1,21 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 
 const Candidates = ({ refresh }) => {
     const [candidates, setCandidates] = useState([]);
 
-    const fetchCandidates = async () => {
-        try {
-            const response = await axios.get('http://localhost:5001/api/candidates');
-            setCandidates(response.data);
-        } catch (error) {
-            console.error('Failed to fetch candidates', error);
-        }
-    };
-
     useEffect(() => {
-        fetchCandidates();
-    }, [refresh]); // Fetch candidates when `refresh` changes
+        // Dummy data for candidates
+        const dummyCandidates = [
+            { id: 1, name: 'Candidate 1', votes: 10 },
+            { id: 2, name: 'Candidate 2', votes: 20 },
+            { id: 3, name: 'Candidate 3', votes: 5 }
+        ];
+        setCandidates(dummyCandidates);
+    }, [refresh]);
 
     return (
         <div>

@@ -10,7 +10,7 @@ const Vote = ({ token }) => {
     const handleVote = async () => {
         try {
             await axios.post(
-                'http://localhost:5000/api/vote',
+                'http://localhost:5001/api/vote',
                 { candidateId },
                 { headers: { Authorization: `Bearer ${token}` } }
             );

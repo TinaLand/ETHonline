@@ -6,7 +6,7 @@ const Login = ({ setToken }) => {
 
     const handleLogin = async () => {
         try {
-            const response = await axios.post('http://localhost:5000/api/login', { address });
+            const response = await axios.post('http://localhost:5001/api/login', { address });
             setToken(response.data.token);
         } catch (error) {
             console.error('Login failed', error);

@@ -16,5 +16,9 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.5.4",
     "web3": "^4.12.1"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "hardhat": "^2.22.9"
   }
 }

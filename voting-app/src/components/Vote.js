@@ -1,20 +1,17 @@
 import React, { useState } from 'react';
-import Web3 from 'web3';
 import axios from 'axios';
 
-const web3 = new Web3(Web3.givenProvider || "http://localhost:8545");
-
-const Vote = ({ token }) => {
+const Vote = ({ refreshCandidates }) => {
     const [candidateId, setCandidateId] = useState('');
 
     const handleVote = async () => {
         try {
-            await axios.post(
-                'http://localhost:5001/api/vote',
-                { candidateId },
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
+            // Make the vote request
+            await axios.post('http://localhost:5001/api/vote', { candidateId });
             alert('Vote cast successfully!');
+
+            // Refresh the candidates list
+            refreshCandidates();
         } catch (error) {
             console.error('Vote failed', error);
         }

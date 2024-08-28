@@ -6,8 +6,9 @@ const Login = ({ setToken }) => {
 
     const handleLogin = async () => {
         try {
+            // Fake login: Any input will result in a dummy token
             const response = await axios.post('http://localhost:5001/api/login', { address });
-            setToken(response.data.token);
+            setToken(response.data.token); // Set the dummy token
         } catch (error) {
             console.error('Login failed', error);
         }
@@ -19,7 +20,7 @@ const Login = ({ setToken }) => {
                 type="text"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                placeholder="Enter your address"
+                placeholder="Enter any address"
             />
             <button onClick={handleLogin}>Login</button>
         </div>

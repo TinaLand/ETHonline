@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const Candidates = () => {
+const Candidates = ({ refresh }) => {
     const [candidates, setCandidates] = useState([]);
 
-    useEffect(() => {
-        const fetchCandidates = async () => {
-            try {
-                const response = await axios.get('http://localhost:5001/api/candidates');
-                setCandidates(response.data);
-            } catch (error) {
-                console.error('Failed to fetch candidates', error);
-            }
-        };
+    const fetchCandidates = async () => {
+        try {
+            const response = await axios.get('http://localhost:5001/api/candidates');
+            setCandidates(response.data);
+        } catch (error) {
+            console.error('Failed to fetch candidates', error);
+        }
+    };
 
+    useEffect(() => {
         fetchCandidates();
-    }, []);
+    }, [refresh]); // Fetch candidates when `refresh` changes
 
     return (
         <div>

@@ -5,6 +5,11 @@ import Candidates from './components/Candidates';
 
 const App = () => {
     const [token, setToken] = useState('');
+    const [refresh, setRefresh] = useState(0); // State to trigger refresh
+
+    const refreshCandidates = () => {
+        setRefresh(prev => prev + 1); // Update refresh state to trigger re-fetch
+    };
 
     return (
         <div>
@@ -12,8 +17,8 @@ const App = () => {
                 <Login setToken={setToken} />
             ) : (
                 <>
-                    <Vote token={token} />
-                    <Candidates />
+                    <Vote refreshCandidates={refreshCandidates} />
+                    <Candidates refresh={refresh} />
                 </>
             )}
         </div>

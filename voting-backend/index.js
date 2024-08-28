@@ -1,53 +1,41 @@
 const express = require('express');
-const cors = require('cors');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const app = express();
-app.use(cors());
 app.use(bodyParser.json());
+app.use(cors());
 
-// Dummy data
 let candidates = [
-    { id: 1, name: 'Alice', votes: 0 },
-    { id: 2, name: 'Bob', votes: 0 }
+    { id: 1, name: 'Candidate 1', votes: 0 },
+    { id: 2, name: 'Candidate 2', votes: 0 },
+    { id: 3, name: 'Candidate 3', votes: 0 }
 ];
-const votes = {};
 
-// Endpoint to handle login
+// Fake login endpoint: always return a dummy token
 app.post('/api/login', (req, res) => {
-    const { address } = req.body;
-    // Simple dummy token generation
-    const token = 'dummy-token';
-    res.json({ token });
+    // No matter the input, always return the same token
+    res.json({ token: 'dummy-token' });
 });
 
-// Endpoint to handle voting
+// Voting endpoint (no token validation needed)
 app.post('/api/vote', (req, res) => {
     const { candidateId } = req.body;
-    const { token } = req.headers;
-
-    if (token !== 'dummy-token') {
-        return res.status(401).json({ message: 'Unauthorized' });
-    }
-
-    if (!votes[token]) {
-        votes[token] = true;
-        candidates = candidates.map(candidate =>
-            candidate.id === candidateId
-                ? { ...candidate, votes: candidate.votes + 1 }
-                : candidate
-        );
-        res.json({ message: 'Vote cast successfully!' });
+    const candidate = candidates.find(c => c.id === parseInt(candidateId));
+    if (candidate) {
+        candidate.votes += 1;
+        res.status(200).send('Vote cast successfully');
     } else {
-        res.status(400).json({ message: 'You have already voted' });
+        res.status(404).send('Candidate not found');
     }
 });
 
-// Endpoint to fetch candidates
+// Fetch candidates
 app.get('/api/candidates', (req, res) => {
     res.json(candidates);
 });
 
-app.listen(5001, () => {
-    console.log('Backend server running on port 5000');
+const PORT = process.env.PORT || 5001;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });

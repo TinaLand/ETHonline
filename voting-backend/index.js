@@ -1,59 +1,44 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-const Web3 = require('web3');
-const jwt = require('jsonwebtoken');
-const mongoose = require('mongoose');
 const cors = require('cors');
-
+const Web3 = require('web3');
 const app = express();
-const port = process.env.PORT || 5000;
-const web3 = new Web3('http://localhost:8545'); // Replace with your Ethereum node URL
 
 app.use(cors());
-app.use(bodyParser.json());
+app.use(express.json());
 
-// MongoDB connection
-mongoose.connect('mongodb://localhost:27017/votingapp', { useNewUrlParser: true, useUnifiedTopology: true });
+// Initialize Web3
+const web3 = new Web3(Web3.givenProvider || 'http://localhost:8545');
 
-// User Schema
-const UserSchema = new mongoose.Schema({
-    address: String,
-    name: String,
-    votes: Number
+// Replace these with your actual ABI and contract address
+const contractABI = [ /* Your Contract ABI Here */ ];
+const contractAddress = '0xYourContractAddressHere';
+
+const contract = new web3.eth.Contract(contractABI, contractAddress);
+
+// Endpoint to handle login
+app.post('/api/login', (req, res) => {
+    const { address } = req.body;
+    // Dummy token generation
+    const token = 'dummy-token';
+    res.json({ token });
 });
-const User = mongoose.model('User', UserSchema);
 
-// Middleware for JWT authentication
-const authenticateJWT = (req, res, next) => {
-    const token = req.headers['authorization'];
-    if (token) {
-        jwt.verify(token, 'your_jwt_secret', (err, user) => {
-            if (err) return res.sendStatus(403);
-            req.user = user;
-            next();
-        });
-    } else {
-        res.sendStatus(401);
-    }
-};
-
-// API endpoints
-app.post('/api/vote', authenticateJWT, async (req, res) => {
+// Endpoint to handle voting
+app.post('/api/vote', async (req, res) => {
     const { candidateId } = req.body;
-    const { address } = req.user;
+    const { address } = req.user; // Assuming JWT middleware adds this
 
-    // Interact with smart contract
-    const contract = new web3.eth.Contract(/* ABI */, 'YOUR_CONTRACT_ADDRESS');
     try {
-        await contract.methods.vote(candidateId).send({ from: address });
-        res.send('Vote cast successfully!');
+        const tx = await contract.methods.vote(candidateId).send({ from: address });
+        res.json({ message: 'Vote cast successfully!', transaction: tx });
     } catch (error) {
-        res.status(500).send('Failed to cast vote');
+        console.error('Vote failed', error);
+        res.status(500).json({ message: 'Failed to cast vote', error: error.message });
     }
 });
 
+// Endpoint to fetch candidates
 app.get('/api/candidates', async (req, res) => {
-    const contract = new web3.eth.Contract(/* ABI */, 'YOUR_CONTRACT_ADDRESS');
     try {
         const count = await contract.methods.candidatesCount().call();
         const candidates = [];
@@ -63,22 +48,11 @@ app.get('/api/candidates', async (req, res) => {
         }
         res.json(candidates);
     } catch (error) {
-        res.status(500).send('Failed to fetch candidates');
+        console.error('Failed to fetch candidates', error);
+        res.status(500).json({ message: 'Failed to fetch candidates', error: error.message });
     }
 });
 
-app.post('/api/login', async (req, res) => {
-    const { address } = req.body;
-    const user = await User.findOne({ address });
-
-    if (user) {
-        const token = jwt.sign({ address }, 'your_jwt_secret');
-        res.json({ token });
-    } else {
-        res.status(404).send('User not found');
-    }
-});
-
-app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+app.listen(5000, () => {
+    console.log('Backend server running on port 5000');
 });

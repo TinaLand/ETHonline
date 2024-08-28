@@ -4,7 +4,7 @@ const Login = ({ setToken }) => {
     const [address, setAddress] = useState('');
 
     const handleLogin = () => {
-        setToken('dummyToken'); // Set a dummy token to simulate login
+        setToken('dummyToken'); // Simulate a successful login
     };
 
     return (

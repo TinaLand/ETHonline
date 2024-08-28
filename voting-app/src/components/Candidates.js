@@ -19,7 +19,8 @@ const Candidates = ({ refresh }) => {
             <ul>
                 {candidates.map(candidate => (
                     <li key={candidate.id}>
-                        {candidate.name}: {candidate.votes} votes
+                        <span className="candidate-name">{candidate.name}</span>
+                        <span className="vote-count">{candidate.votes} votes</span>
                     </li>
                 ))}
             </ul>

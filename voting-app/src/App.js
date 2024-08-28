@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './styles.css'; // Import the global stylesheet
+import './styles.css'; // Import the updated global stylesheet
 import Login from './components/Login';
 import Vote from './components/Vote';
 import Candidates from './components/Candidates';

@@ -2,10 +2,21 @@ import React, { useState } from 'react';
 
 const Vote = ({ refreshCandidates }) => {
     const [candidateId, setCandidateId] = useState('');
+    const [hasVoted, setHasVoted] = useState(false);
 
-    const handleVote = async () => {
-        refreshCandidates();
-        alert('Vote cast successfully!');
+    const handleVote = () => {
+        if (hasVoted) {
+            alert('You have already voted! Your vote will not be counted again.');
+            return;
+        }
+
+        if (candidateId) {
+            refreshCandidates(parseInt(candidateId));
+            setHasVoted(true);
+            setCandidateId(''); // Reset the input field after voting
+        } else {
+            alert('Please enter a candidate ID');
+        }
     };
 
     return (
@@ -17,7 +28,9 @@ const Vote = ({ refreshCandidates }) => {
                 onChange={(e) => setCandidateId(e.target.value)}
                 placeholder="Enter candidate ID"
             />
-            <button onClick={handleVote}>Vote</button>
+            <button onClick={handleVote} disabled={hasVoted}>
+                Vote
+            </button>
         </div>
     );
 };

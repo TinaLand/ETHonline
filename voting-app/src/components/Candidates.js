@@ -1,18 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
-const Candidates = ({ refresh }) => {
-    const [candidates, setCandidates] = useState([]);
-
-    useEffect(() => {
-        // Dummy data for candidates
-        const dummyCandidates = [
-            { id: 1, name: 'Candidate 1', votes: 10 },
-            { id: 2, name: 'Candidate 2', votes: 20 },
-            { id: 3, name: 'Candidate 3', votes: 5 }
-        ];
-        setCandidates(dummyCandidates);
-    }, [refresh]);
-
+const Candidates = ({ candidates }) => {
     return (
         <div>
             <h2>Candidates</h2>
@@ -20,7 +8,7 @@ const Candidates = ({ refresh }) => {
                 {candidates.map(candidate => (
                     <li key={candidate.id}>
                         <span className="candidate-name">{candidate.name}</span>
-                        <span className="vote-count">{candidate.votes} votes</span>
+                        <span className="vote-count"> {candidate.votes} votes</span>
                     </li>
                 ))}
             </ul>

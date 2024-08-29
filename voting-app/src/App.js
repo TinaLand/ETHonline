@@ -6,10 +6,22 @@ import Candidates from './components/Candidates';
 
 const App = () => {
     const [token, setToken] = useState('');
-    const [refresh, setRefresh] = useState(0);
+    const [candidates, setCandidates] = useState([
+        { id: 1, name: 'Candidate 1', votes: 10 },
+        { id: 2, name: 'Candidate 2', votes: 20 },
+        { id: 3, name: 'Candidate 3', votes: 5 }
+    ]);
+    const [hasVoted, setHasVoted] = useState(false);
 
-    const refreshCandidates = () => {
-        setRefresh(prev => prev + 1);
+    const refreshCandidates = (votedCandidateId) => {
+        setCandidates((prevCandidates) => 
+            prevCandidates.map((candidate) =>
+                candidate.id === votedCandidateId
+                    ? { ...candidate, votes: candidate.votes + 1 }
+                    : candidate
+            )
+        );
+        setHasVoted(true); // Ensure the user can't vote again
     };
 
     return (
@@ -19,7 +31,7 @@ const App = () => {
             ) : (
                 <>
                     <Vote refreshCandidates={refreshCandidates} />
-                    <Candidates refresh={refresh} />
+                    <Candidates candidates={candidates} />
                 </>
             )}
         </div>

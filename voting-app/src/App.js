@@ -3,6 +3,9 @@ import './styles.css'; // Import the updated global stylesheet
 import Login from './components/Login';
 import Vote from './components/Vote';
 import Candidates from './components/Candidates';
+import Header from './components/Header';
+import Footer from './components/Footer';
+
 
 const App = () => {
     const [token, setToken] = useState('');
@@ -24,17 +27,27 @@ const App = () => {
         setHasVoted(true); // Ensure the user can't vote again
     };
 
+
+    
     return (
-        <div className="container">
-            {!token ? (
-                <Login setToken={setToken} />
-            ) : (
-                <>
-                    <Vote refreshCandidates={refreshCandidates} />
-                    <Candidates candidates={candidates} />
-                </>
-            )}
+        <div className="app">
+            <Header />
+                <main>
+                    <div className="container">
+                        {!token ? (
+                            <Login setToken={setToken} />
+                        ) : (
+                            <>
+                                <Vote refreshCandidates={refreshCandidates} />
+                                <Candidates candidates={candidates} />
+                            </>
+                        )}
+                    </div>
+                </main>
+            <Footer />
         </div>
+
+
     );
 };
 

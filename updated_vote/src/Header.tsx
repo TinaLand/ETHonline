@@ -80,7 +80,7 @@ const Header: React.FC<HeaderProps> = () => {
                     <Link to="/contact" style={styles.navLink}>Contact</Link>
                 </nav>
                 <div style={styles.profile}>
-                    <img src="../images/profile-pic.jpg" alt="Profile" style={styles.profilePic} />
+                    {/* <img src="../images/profile-pic.jpg" alt="Profile" style={styles.profilePic} /> */}
                 </div>
             </div>
         </header>

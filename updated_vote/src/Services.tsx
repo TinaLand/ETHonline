@@ -1,64 +1,4 @@
-// import React, { useState } from 'react';
-
-// const Services: React.FC = () => {
-//   const [loggedIn, setLoggedIn] = useState<boolean>(false);
-
-//   const handleLogin = async () => {
-//     // Call your login function here
-//     const web3authProvider = await web3auth.connect();
-//     if (web3authProvider) {
-//       setLoggedIn(true);
-//     }
-//   };
-
-//   const handleLogout = async () => {
-//     await web3auth.logout();
-//     setLoggedIn(false);
-//   };
-
-//   return (
-//     <div>
-//       {!loggedIn ? (
-//         <div>
-//           <h2>Login to Vote</h2>
-//           <button onClick={handleLogin} className="card">
-//             Login
-//           </button>
-//         </div>
-//       ) : (
-//         <div>
-//           <h2>Services</h2>
-//           <div className="button-container">
-//             <button onClick={getUserInfo} className="card">
-//               Get User Info
-//             </button>
-//             <button onClick={getAccounts} className="card">
-//               Get Accounts
-//             </button>
-//             <button onClick={getBalance} className="card">
-//               Get Balance
-//             </button>
-//             <button onClick={signMessage} className="card">
-//               Sign Message
-//             </button>
-//             <button onClick={sendTransaction} className="card">
-//               Send Transaction
-//             </button>
-//             <button onClick={handleLogout} className="card">
-//               Log Out
-//             </button>
-//           </div>
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default Services;
-
-
 import React, { useEffect, useState } from "react";
-import "./App.css";
 import Header from './Header';
 import Footer from './Footer';
 import { CHAIN_NAMESPACES, IProvider, WEB3AUTH_NETWORK } from "@web3auth/base";
@@ -217,23 +157,23 @@ const Services: React.FC = () => {
 
   const loggedInView = (
     <>
-      <div className="button-container">
-        <button onClick={getUserInfo} className="card">
+      <div style={styles.buttonContainer}>
+        <button onClick={getUserInfo} style={styles.card}>
           Get User Info
         </button>
-        <button onClick={getAccounts} className="card">
+        <button onClick={getAccounts} style={styles.card}>
           Get Accounts
         </button>
-        <button onClick={getBalance} className="card">
+        <button onClick={getBalance} style={styles.card}>
           Get Balance
         </button>
-        <button onClick={signMessage} className="card">
+        <button onClick={signMessage} style={styles.card}>
           Sign Message
         </button>
-        <button onClick={sendTransaction} className="card">
+        <button onClick={sendTransaction} style={styles.card}>
           Send Transaction
         </button>
-        <button onClick={logout} className="card">
+        <button onClick={logout} style={styles.card}>
           Log Out
         </button>
       </div>
@@ -243,22 +183,73 @@ const Services: React.FC = () => {
       </div>
     </>
   );
-  
 
   const unloggedInView = (
-    <button onClick={login} className="card">
-      Login
-    </button>
+    <div style={styles.loginContainer}>
+      <img
+        src="https://media.istockphoto.com/id/1252900502/vector/banner-set-of-election-ballot-box-with-a-combination-of-american-flag.jpg?s=612x612&w=0&k=20&c=NcGfnsznn9Ta1irfKS-hB3eCpxWhIqdAyfZP1UFp1Vo="
+        alt="Voting Banner"
+        style={styles.loginImage}
+      />
+
+      <button onClick={login} style={{ ...styles.card, ...styles.loginButton }}>
+        Login
+      </button>
+    </div>
   );
 
   return (
-    <div className="app-container">
+    <div style={styles.appContainer}>
       <Header />
-      <div className="main-content">
+      <div style={styles.mainContent}>
         {loggedIn ? loggedInView : unloggedInView}
       </div>
     </div>
   );
+};
+
+const styles = {
+  appContainer: {
+    display: "flex",
+    flexDirection: "column" as "column",
+    minHeight: "100vh",
+  },
+  mainContent: {
+    flex: 1,
+  },
+  loginContainer: {
+    display: "flex",
+    flexDirection: "column" as "column",
+    alignItems: "center",
+    justifyContent: "center",  // Center the content vertically
+    height: "80vh",
+    gap: "20px",  // Add a gap between elements for closer alignment
+  },
+  loginImage: {
+    maxWidth: "100%",
+    height: "auto",
+    maxHeight: "80%",  // Make the image bigger
+    objectFit: "contain" as "contain",
+  },
+  loginButton: {
+    marginTop: "0",  // Reduce the margin top to bring it closer to the image
+    width: "200px",
+    padding: "10px",
+    fontSize: "1.2em",
+  },
+  buttonContainer: {
+    marginTop: "20px",
+  },
+  card: {
+    padding: "10px",
+    margin: "10px",
+    borderRadius: "5px",
+    cursor: "pointer",
+    backgroundColor: "#007bff",
+    color: "#fff",
+    border: "none",
+    fontSize: "1em",
+  },
 };
 
 export default Services;

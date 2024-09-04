@@ -215,10 +215,7 @@ function App() {
   return (
     <div className="container">
       <h1 className="title">
-        <a target="_blank" href="https://web3auth.io/docs/sdk/pnp/web/modal" rel="noreferrer">
-          Web3Auth{" "}
-        </a>
-        & React Quick Start
+        The Great Vote
       </h1>
 
       <div className="grid">{loggedIn ? loggedInView : unloggedInView}</div>

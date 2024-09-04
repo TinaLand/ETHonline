@@ -158,37 +158,25 @@ const App: React.FC = () => {
 
   const loggedInView = (
     <>
-      <div className="flex-container">
-        <div>
-          <button onClick={getUserInfo} className="card">
-            Get User Info
-          </button>
-        </div>
-        <div>
-          <button onClick={getAccounts} className="card">
-            Get Accounts
-          </button>
-        </div>
-        <div>
-          <button onClick={getBalance} className="card">
-            Get Balance
-          </button>
-        </div>
-        <div>
-          <button onClick={signMessage} className="card">
-            Sign Message
-          </button>
-        </div>
-        <div>
-          <button onClick={sendTransaction} className="card">
-            Send Transaction
-          </button>
-        </div>
-        <div>
-          <button onClick={logout} className="card">
-            Log Out
-          </button>
-        </div>
+      <div className="button-container">
+        <button onClick={getUserInfo} className="card">
+          Get User Info
+        </button>
+        <button onClick={getAccounts} className="card">
+          Get Accounts
+        </button>
+        <button onClick={getBalance} className="card">
+          Get Balance
+        </button>
+        <button onClick={signMessage} className="card">
+          Sign Message
+        </button>
+        <button onClick={sendTransaction} className="card">
+          Send Transaction
+        </button>
+        <button onClick={logout} className="card">
+          Log Out
+        </button>
       </div>
       <Vote refreshCandidates={refreshCandidates} />
       <div id="console" style={{ whiteSpace: "pre-line" }}>
@@ -196,6 +184,7 @@ const App: React.FC = () => {
       </div>
     </>
   );
+  
 
   const unloggedInView = (
     <button onClick={login} className="card">

@@ -1,12 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 import Header from './Header';
 import Footer from './Footer';
-import Home from './Home';
-import About from './About';
-import Services from './Services';
-import Contact from './Contact';
 import { CHAIN_NAMESPACES, IProvider, WEB3AUTH_NETWORK } from "@web3auth/base";
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { Web3Auth } from "@web3auth/modal";
@@ -35,10 +30,44 @@ const web3auth = new Web3Auth({
   privateKeyProvider,
 });
 
+const Vote: React.FC<{ refreshCandidates: (candidateId: number) => void }> = ({ refreshCandidates }) => {
+  const [candidateId, setCandidateId] = useState<string>('');
+  const [hasVoted, setHasVoted] = useState<boolean>(false);
+
+  const handleVote = () => {
+    if (hasVoted) {
+      alert('You have already voted! Your vote will not be counted again.');
+      return;
+    }
+
+    if (candidateId) {
+      refreshCandidates(parseInt(candidateId));
+      setHasVoted(true);
+      setCandidateId('');
+    } else {
+      alert('Please enter a candidate ID');
+    }
+  };
+
+  return (
+    <div>
+      <h2>Vote</h2>
+      <input
+        type="number"
+        value={candidateId}
+        onChange={(e) => setCandidateId(e.target.value)}
+        placeholder="Enter candidate ID"
+      />
+      <button onClick={handleVote} disabled={hasVoted}>
+        Vote
+      </button>
+    </div>
+  );
+};
+
 const App: React.FC = () => {
   const [provider, setProvider] = useState<IProvider | null>(null);
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
-  const location = useLocation();
 
   useEffect(() => {
     const init = async () => {
@@ -122,6 +151,11 @@ const App: React.FC = () => {
     }
   }
 
+  const refreshCandidates = (candidateId: number) => {
+    console.log(`Voted for candidate ${candidateId}`);
+    // Implement your logic to handle the voting result
+  };
+
   const loggedInView = (
     <>
       <div className="button-container">
@@ -144,26 +178,28 @@ const App: React.FC = () => {
           Log Out
         </button>
       </div>
+      <Vote refreshCandidates={refreshCandidates} />
       <div id="console" style={{ whiteSpace: "pre-line" }}>
         <p style={{ whiteSpace: "pre-line" }}></p>
       </div>
     </>
   );
+  
+
+  const unloggedInView = (
+    <button onClick={login} className="card">
+      Login
+    </button>
+  );
 
   return (
-    <>
+    <div className="app-container">
       <Header />
       <div className="main-content">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/contact" element={<Contact />} />
-        </Routes>
-        {loggedIn && location.pathname === '/services' && loggedInView}
+        {loggedIn ? loggedInView : unloggedInView}
       </div>
       <Footer />
-    </>
+    </div>
   );
 };
 

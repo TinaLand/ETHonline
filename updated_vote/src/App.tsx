@@ -1,21 +1,14 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
-
-// IMP START - Quick Start
+import Header from './Header';
+import Footer from './Footer';
 import { CHAIN_NAMESPACES, IProvider, WEB3AUTH_NETWORK } from "@web3auth/base";
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { Web3Auth } from "@web3auth/modal";
-// IMP END - Quick Start
-
-// IMP START - Blockchain Calls
 import RPC from "./ethersRPC";
-// IMP END - Blockchain Calls
 
-// IMP START - Dashboard Registration
 const clientId = "BPi5PB_UiIZ-cPz1GtV5i1I2iOSOHuimiXBI0e-Oe_u6X3oVAbCiAZOTEBtTXw4tsluTITPqA8zMsfxIKMjiqNQ";
-// IMP END - Dashboard Registration
 
-// IMP START - Chain Config
 const chainConfig = {
   chainNamespace: CHAIN_NAMESPACES.EIP155,
   chainId: "0xaa36a7",
@@ -26,9 +19,7 @@ const chainConfig = {
   tickerName: "Ethereum",
   logo: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
 };
-// IMP END - Chain Config
 
-// IMP START - SDK Initialization
 const privateKeyProvider = new EthereumPrivateKeyProvider({
   config: { chainConfig },
 });
@@ -38,11 +29,10 @@ const web3auth = new Web3Auth({
   web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
   privateKeyProvider,
 });
-// IMP END - SDK Initialization
 
-const Vote = ({ refreshCandidates }) => {
-  const [candidateId, setCandidateId] = useState('');
-  const [hasVoted, setHasVoted] = useState(false);
+const Vote: React.FC<{ refreshCandidates: (candidateId: number) => void }> = ({ refreshCandidates }) => {
+  const [candidateId, setCandidateId] = useState<string>('');
+  const [hasVoted, setHasVoted] = useState<boolean>(false);
 
   const handleVote = () => {
     if (hasVoted) {
@@ -53,7 +43,7 @@ const Vote = ({ refreshCandidates }) => {
     if (candidateId) {
       refreshCandidates(parseInt(candidateId));
       setHasVoted(true);
-      setCandidateId(''); // Reset the input field after voting
+      setCandidateId('');
     } else {
       alert('Please enter a candidate ID');
     }
@@ -75,9 +65,9 @@ const Vote = ({ refreshCandidates }) => {
   );
 };
 
-function App() {
+const App: React.FC = () => {
   const [provider, setProvider] = useState<IProvider | null>(null);
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
 
   useEffect(() => {
     const init = async () => {
@@ -161,7 +151,7 @@ function App() {
     }
   }
 
-  const refreshCandidates = (candidateId) => {
+  const refreshCandidates = (candidateId: number) => {
     console.log(`Voted for candidate ${candidateId}`);
     // Implement your logic to handle the voting result
   };
@@ -195,13 +185,14 @@ function App() {
           </button>
         </div>
         <div>
-          <Vote refreshCandidates={refreshCandidates} />
-        </div>
-        <div>
           <button onClick={logout} className="card">
             Log Out
           </button>
         </div>
+      </div>
+      <Vote refreshCandidates={refreshCandidates} />
+      <div id="console" style={{ whiteSpace: "pre-line" }}>
+        <p style={{ whiteSpace: "pre-line" }}></p>
       </div>
     </>
   );
@@ -213,30 +204,14 @@ function App() {
   );
 
   return (
-    <div className="container">
-      <h1 className="title">
-        The Great Vote
-      </h1>
-
-      <div className="grid">{loggedIn ? loggedInView : unloggedInView}</div>
-      <div id="console" style={{ whiteSpace: "pre-line" }}>
-        <p style={{ whiteSpace: "pre-line" }}></p>
+    <div className="app-container">
+      <Header />
+      <div className="main-content">
+        {loggedIn ? loggedInView : unloggedInView}
       </div>
-
-      <footer className="footer">
-        {/* <a
-          href="https://github.com/Web3Auth/web3auth-pnp-examples/tree/main/web-modal-sdk/quick-starts/react-vite-modal-quick-start"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Source code
-        </a> */}
-        <a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FWeb3Auth%2Fweb3auth-pnp-examples%2Ftree%2Fmain%2Fweb-modal-sdk%2Fquick-starts%2Freact-vite-evm-modal-quick-start&project-name=w3a-react-vite-no-modal&repository-name=w3a-react-vite-no-modal">
-          <img src="https://vercel.com/button" alt="Deploy with Vercel" />
-        </a>
-      </footer>
+      <Footer />
     </div>
   );
-}
+};
 
 export default App;

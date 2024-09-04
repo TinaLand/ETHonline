@@ -16,7 +16,7 @@ const About: React.FC = () => {
         <section style={styles.section}>
           <h2 style={styles.sectionTitle}>How It Works</h2>
           <p style={styles.sectionContent}>
-            Every user gets a chance to vote for their preferred leader. You can also donate Crypto to support the campaigns of the leaders you believe in.
+            Every user gets a chance to vote for their preferred leader. You can also donate Ethereum to support the campaigns of the leaders you believe in.
           </p>
         </section>
         <section style={styles.section}>

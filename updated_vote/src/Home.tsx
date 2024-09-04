@@ -32,7 +32,7 @@ const Home: React.FC = () => {
             style={styles.sectionImage}
           />
           <p style={styles.sectionContent}>
-            Not only can you vote for your preferred leader, but you can also donate Crypto to support their campaign.
+            Not only can you vote for your preferred leader, but you can also donate Ethereum to support their campaign.
           </p>
         </section>
         {/* <button style={styles.button}>Get Started</button> */}

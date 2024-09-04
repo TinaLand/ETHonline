@@ -257,7 +257,7 @@ const Services: React.FC = () => {
       <div className="main-content">
         {loggedIn ? loggedInView : unloggedInView}
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 };

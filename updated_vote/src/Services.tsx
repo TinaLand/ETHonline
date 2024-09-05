@@ -9,6 +9,7 @@ import { Web3AuthNoModal } from "@web3auth/no-modal";
 import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
 import EthereumRPC from "./ethereumRPC";
 import SignClient from "./signClient";
+import { IndexService } from "@ethsign/sp-sdk";
 
 
 
@@ -245,7 +246,104 @@ const Services: React.FC = () => {
     uiConsole(response);
   }
 
-  
+  const fetchSchemaListFromIndexService = async () => {
+    if (!provider) {
+        uiConsole("Provider not initialized yet");
+        return;
+    }
+
+    const indexService = new IndexService('testnet');
+    uiConsole("Fetching Schema List...");
+
+    try {
+        const response = await indexService.querySchemaList({ page: 1 });
+        uiConsole({
+            success: true,
+            schemaList: response.schemaList,
+        });
+    } catch (error) {
+        uiConsole({
+            success: false,
+            message: "Failed to fetch schema list",
+            error: error.message,
+        });
+    }
+};
+
+const fetchSchemaFromIndexService = async (schemaId: string) => {
+  if (!provider) {
+      uiConsole("Provider not initialized yet");
+      return;
+  }
+
+  const indexService = new IndexService('testnet');
+  uiConsole("Fetching Schema...");
+
+  try {
+      const response = await indexService.querySchema(schemaId);
+      uiConsole({
+          success: true,
+          schema: response.schema,
+      });
+  } catch (error) {
+      uiConsole({
+          success: false,
+          message: "Failed to fetch schema",
+          error: error.message,
+      });
+  }
+};
+
+
+const fetchAttestationListFromIndexService = async () => {
+  if (!provider) {
+      uiConsole("Provider not initialized yet");
+      return;
+  }
+
+  const indexService = new IndexService('testnet');
+  uiConsole("Fetching Attestation List...");
+
+  try {
+      const response = await indexService.queryAttestationList({ page: 1 });
+      uiConsole({
+          success: true,
+          attestationList: response.attestationList,
+      });
+  } catch (error) {
+      uiConsole({
+          success: false,
+          message: "Failed to fetch attestation list",
+          error: error.message,
+      });
+  }
+};
+
+const fetchAttestationFromIndexService = async (attestationId: string) => {
+  if (!provider) {
+      uiConsole("Provider not initialized yet");
+      return;
+  }
+
+  const indexService = new IndexService('testnet');
+  uiConsole("Fetching Attestation...");
+
+  try {
+      const response = await indexService.queryAttestation(attestationId);
+      uiConsole({
+          success: true,
+          attestation: response.attestation,
+      });
+  } catch (error) {
+      uiConsole({
+          success: false,
+          message: "Failed to fetch attestation",
+          error: error.message,
+      });
+  }
+};
+
+
   function uiConsole(...args: any[]): void {
     const el = document.querySelector("#console>p");
     if (el) {
@@ -286,6 +384,23 @@ const Services: React.FC = () => {
         <button onClick={createSchema} style={styles.card}>
           Create schema
         </button>
+
+        <button onClick={fetchSchemaListFromIndexService} style={styles.card}>
+        fetch Schema List From Index Service
+        </button>
+
+        <button onClick={fetchSchemaFromIndexService} style={styles.card}>
+          fetch Schema From Index Service
+        </button>
+
+        <button onClick={fetchAttestationListFromIndexService} style={styles.card}>
+        fetch Attestation List From Index Service
+        </button>
+
+        <button onClick={fetchAttestationFromIndexService} style={styles.card}>
+        fetch Attestation From Index Service
+        </button>
+
         <button onClick={logout} style={styles.card}>
           Log Out
         </button>

@@ -1,4 +1,4 @@
-import { AttestationResult, EvmChains, SignProtocolClient, SpMode, OffChainSignType } from "@ethsign/sp-sdk";
+import { AttestationResult, EvmChains, SignProtocolClient, SpMode, OffChainSignType, IndexService } from "@ethsign/sp-sdk";
 
 import axios from "axios";
 import { WalletClient } from "viem";
@@ -130,6 +130,98 @@ export default class SignClient {
         }
     }
 
+    async getSchemaListFromIndexService(page: number = 1): Promise<any> {
+        try {
+            const indexService = new IndexService('testnet');
+            const response = await indexService.querySchemaList({ page });
+    
+            // Return response if successful
+            return {
+                success: true,
+                schemaList: response.data, // Assuming response.data contains the schema list
+                message: 'Schema list retrieved successfully',
+            };
+        } catch (e) {
+            console.log("failure reason");
+            console.log(e);
+            console.error(e);
+            return {
+                success: false,
+                message: 'Failed to retrieve schema list',
+            };
+        }
+    }
+
+    
+    async getSchemaFromIndexService(schemaId: string): Promise<any> {
+        try {
+            const indexService = new IndexService('testnet');
+            const response = await indexService.querySchema(schemaId);
+    
+            // Return response if successful
+            return {
+                success: true,
+                schema: response.data, // Assuming response.data contains the schema details
+                message: 'Schema retrieved successfully',
+            };
+        } catch (e) {
+            console.log("failure reason");
+            console.log(e);
+            console.error(e);
+            return {
+                success: false,
+                message: 'Failed to retrieve schema',
+            };
+        }
+    }
+
+    async getAttestationListFromIndexService(page: number = 1): Promise<any> {
+        try {
+            const indexService = new IndexService('testnet');
+            const response = await indexService.queryAttestationList({ page });
+    
+            // Return response if successful
+            return {
+                success: true,
+                attestationList: response.data, // Assuming response.data contains the attestation list
+                message: 'Attestation list retrieved successfully',
+            };
+        } catch (e) {
+            console.log("failure reason");
+            console.log(e);
+            console.error(e);
+            return {
+                success: false,
+                message: 'Failed to retrieve attestation list',
+            };
+        }
+    }
+
+    async getAttestationFromIndexService(attestationId: string): Promise<any> {
+        try {
+            const indexService = new IndexService('testnet');
+            const response = await indexService.queryAttestation(attestationId);
+    
+            // Return response if successful
+            return {
+                success: true,
+                attestation: response.data, // Assuming response.data contains the attestation details
+                message: 'Attestation retrieved successfully',
+            };
+        } catch (e) {
+            console.log("failure reason");
+            console.log(e);
+            console.error(e);
+            return {
+                success: false,
+                message: 'Failed to retrieve attestation',
+            };
+        }
+    }
+        
+
+    
+    
     private async makeSignProtocolRequest(endpoint: string, options: any) {
         const url = `https://testnet-rpc.sign.global/api/${endpoint}`;
         const res = await axios.request({

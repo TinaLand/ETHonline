@@ -24,12 +24,36 @@ export default class SignClient {
         this.signClient = new SignProtocolClient(SpMode.OnChain, {
             chain: EvmChains.sepolia,
             walletClient: walletClient,
-            // account: privateKeyToAccount(privateKey),
-
         });
     }
 
-    async attest(address: string): Promise<AttestationResult> {
+    async createSchema(schemaId: string, schemaData: Array<{ name: string, type: string }>): Promise<any> {
+        try {
+            // Call the Sign Protocol client to create a schema
+            const response = await this.signClient.createSchema({
+                schemaId: schemaId,
+                data: schemaData,
+            });
+    
+            // Return response if successful
+            return {
+                success: true,
+                schemaId: response.schemaId, // Return the schema ID
+                message: 'Schema created successfully',
+            };
+        } catch (e) {
+            console.log("failure reason")
+            console.log(e)
+            console.error(e);
+            return {
+                success: false,
+                message: 'Schema creation failed',
+            };
+        }
+    }
+    
+    
+    async createAttestation(address: string): Promise<AttestationResult> {
         try {
             const response = await this.signClient.createAttestation({
                 schemaId: "0x65",
@@ -46,6 +70,28 @@ export default class SignClient {
         }
     }
 
+    async revokeAttestation(attestationId: string, reason: string) {
+        try {
+            // Revoke the attestation by its ID
+            const response = await this.signClient.revokeAttestation({
+                attestationId: attestationId,
+                reason: reason,  // The reason for revocation
+            });
+    
+            return {
+                success: true,
+                message: 'Attestation revoked successfully',
+            };
+        } catch (e) {
+            console.error(e);
+            return {
+                success: false,
+                message: 'Failed to revoke attestation',
+            };
+        }
+    }
+
+    
     async fetchAccountAttestations(address: string) {
         try {
             const response = await this.makeSignProtocolRequest("index/attestations", {

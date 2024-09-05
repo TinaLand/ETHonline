@@ -163,6 +163,48 @@ const Services: React.FC = () => {
     uiConsole(hash);
   };
 
+  const createSchema = async () => {
+    if (!provider) {
+        uiConsole("Provider not initialized yet");
+        return;
+    }
+
+    const ethereumRPC = new EthereumRPC(provider!);
+    console.log("provider");
+    console.log(provider);
+    console.log("wallet client");
+    console.log(ethereumRPC.walletClient);
+
+    const signClient = new SignClient(ethereumRPC.walletClient);
+    uiConsole("Creating Schema...");
+
+    // Define your schema ID and schema data here
+    const schemaId = "VoteAndDonationSchema"; // You might need to generate or provide this ID
+    const schemaData = [
+        { name: "user", type: "string" },
+        { name: "candidate", type: "string" },
+        { name: "donationAmount", type: "number" },
+    ];
+
+    try {
+        // Call the createSchema method
+        const response = await signClient.createSchema(schemaId, schemaData);
+
+        // Log response and use uiConsole to display the result
+        uiConsole({
+            "schemaId": response.schemaId,
+            "message": response.message,
+        });
+    } catch (error) {
+        console.error("Error creating schema:", error);
+        uiConsole({
+            "error": "Schema creation failed",
+            "details": error.message,
+        });
+    }
+};
+
+
   const createAttestation = async () => {
     if (!provider) {
       uiConsole("Provider not initialized yet");
@@ -179,7 +221,7 @@ const Services: React.FC = () => {
 
     const address = await ethereumRPC.getAccount();
     console.log(address)
-    const response = await signClient.attest(address);
+    const response = await signClient.createAttestation(address);
 
     uiConsole({
       "hash": response.txHash,
@@ -235,11 +277,14 @@ const Services: React.FC = () => {
         <button onClick={sendTransaction} style={styles.card}>
           Send Transaction
         </button>
+        <button onClick={createAttestation} style={styles.card}>
+          Create attestation
+        </button>
         <button onClick={fetchAccountAttestations} style={styles.card}>
           Fetch attestations
         </button>
-        <button onClick={createAttestation} style={styles.card}>
-          Create attestation
+        <button onClick={createSchema} style={styles.card}>
+          Create schema
         </button>
         <button onClick={logout} style={styles.card}>
           Log Out

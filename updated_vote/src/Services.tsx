@@ -170,13 +170,16 @@ const Services: React.FC = () => {
     }
 
     const ethereumRPC = new EthereumRPC(provider!);
+    console.log("provider")
+    console.log(provider)
+    console.log("wallet client")
+    console.log(ethereumRPC.walletClient)
     const signClient = new SignClient(ethereumRPC.walletClient);
     uiConsole("Creating Attestation...");
 
     const address = await ethereumRPC.getAccount();
     console.log(address)
     const response = await signClient.attest(address);
-    // console.log(response)
 
     uiConsole({
       "hash": response.txHash,

@@ -1,6 +1,21 @@
-import { AttestationResult, EvmChains, SignProtocolClient, SpMode } from "@ethsign/sp-sdk";
+import { AttestationResult, EvmChains, SignProtocolClient, SpMode, OffChainSignType } from "@ethsign/sp-sdk";
+
 import axios from "axios";
 import { WalletClient } from "viem";
+import { privateKeyToAccount } from 'viem/accounts';
+const privateKey = '0xabc'; // optional
+
+
+// const client = new SignProtocolClient(SpMode.OffChain, {
+//   signType: OffChainSignType.EvmEip712,
+//   account: privateKeyToAccount(privateKey), // optional
+// });
+
+//create schema
+// const schemaInfo = await client.createSchema({
+//   name: 'xxx',
+//   data: [{ name: 'name', type: 'string' }],
+// });
 
 export default class SignClient {
     private readonly signClient: SignProtocolClient;
@@ -9,6 +24,8 @@ export default class SignClient {
         this.signClient = new SignProtocolClient(SpMode.OnChain, {
             chain: EvmChains.sepolia,
             walletClient: walletClient,
+            // account: privateKeyToAccount(privateKey),
+
         });
     }
 
@@ -24,6 +41,7 @@ export default class SignClient {
 
             return response;
         } catch (e) {
+            console.log(e)
             throw e;
         }
     }

@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from "react";
 import Header from './Header';
 import Footer from './Footer';
-import { CHAIN_NAMESPACES, IProvider, WEB3AUTH_NETWORK } from "@web3auth/base";
+import { CHAIN_NAMESPACES, IProvider, WEB3AUTH_NETWORK, WALLET_ADAPTERS } from "@web3auth/base";
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { Web3Auth } from "@web3auth/modal";
 import RPC from "./ethersRPC";
+import { Web3AuthNoModal } from "@web3auth/no-modal";
+import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
+import EthereumRPC from "./ethereumRPC";
+import SignClient from "./signClient";
+
+
 
 const clientId = "BPi5PB_UiIZ-cPz1GtV5i1I2iOSOHuimiXBI0e-Oe_u6X3oVAbCiAZOTEBtTXw4tsluTITPqA8zMsfxIKMjiqNQ";
 
@@ -28,6 +34,9 @@ const web3auth = new Web3Auth({
   web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
   privateKeyProvider,
 });
+
+const openloginAdapter = new OpenloginAdapter();
+web3auth.configureAdapter(openloginAdapter);
 
 const Vote: React.FC<{ refreshCandidates: (candidateId: number) => void }> = ({ refreshCandidates }) => {
   const [candidateId, setCandidateId] = useState<string>('');
@@ -86,7 +95,10 @@ const Services: React.FC = () => {
   }, []);
 
   const login = async () => {
-    const web3authProvider = await web3auth.connect();
+    // const web3authProvider = await web3auth.connect();
+    const web3authProvider = await web3auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
+      loginProvider: "google",
+    });
     setProvider(web3authProvider);
     if (web3auth.connected) {
       setLoggedIn(true);
@@ -110,7 +122,10 @@ const Services: React.FC = () => {
       uiConsole("provider not initialized yet");
       return;
     }
-    const address = await RPC.getAccounts(provider);
+    // const address = await RPC.getAccounts(provider);
+    // uiConsole(address);
+    const ethereumRPC = new EthereumRPC(provider!);
+    const address = await ethereumRPC.getAccount();
     uiConsole(address);
   };
 
@@ -119,7 +134,9 @@ const Services: React.FC = () => {
       uiConsole("provider not initialized yet");
       return;
     }
-    const balance = await RPC.getBalance(provider);
+    // const balance = await RPC.getBalance(provider);
+    const ethereumRPC = new EthereumRPC(provider!);
+    const balance = await ethereumRPC.fetchBalance();
     uiConsole(balance);
   };
 
@@ -128,20 +145,62 @@ const Services: React.FC = () => {
       uiConsole("provider not initialized yet");
       return;
     }
-    const signedMessage = await RPC.signMessage(provider);
-    uiConsole(signedMessage);
-  };
+    // const signedMessage = await RPC.signMessage(provider);
+    const ethereumRPC = new EthereumRPC(provider!);
+    const signedMessage = await ethereumRPC.signMessage();
+    uiConsole(signedMessage);  };
 
   const sendTransaction = async () => {
     if (!provider) {
       uiConsole("provider not initialized yet");
       return;
     }
+    const ethereumRPC = new EthereumRPC(provider!);
     uiConsole("Sending Transaction...");
-    const transactionReceipt = await RPC.sendTransaction(provider);
-    uiConsole(transactionReceipt);
+    // const transactionReceipt = await RPC.sendTransaction(provider);
+    // uiConsole(transactionReceipt);
+    const hash = await ethereumRPC.sendTransaction();
+    uiConsole(hash);
   };
 
+  const createAttestation = async () => {
+    if (!provider) {
+      uiConsole("Provider not initialized yet");
+      return;
+    }
+
+    const ethereumRPC = new EthereumRPC(provider!);
+    const signClient = new SignClient(ethereumRPC.walletClient);
+    uiConsole("Creating Attestation...");
+
+    const address = await ethereumRPC.getAccount();
+    console.log(address)
+    const response = await signClient.attest(address);
+    // console.log(response)
+
+    uiConsole({
+      "hash": response.txHash,
+      "attestationId": response.attestationId,
+    });
+  };
+
+  const fetchAccountAttestations = async () => {
+    if (!provider) {
+      uiConsole("Provider not initialized yet");
+      return;
+    }
+
+    const ethereumRPC = new EthereumRPC(provider!);
+    const signClient = new SignClient(ethereumRPC.walletClient);
+    uiConsole("Fetching Attestation...");
+
+    const address = await ethereumRPC.getAccount();
+    const response = await signClient.fetchAccountAttestations(address);
+
+    uiConsole(response);
+  }
+
+  
   function uiConsole(...args: any[]): void {
     const el = document.querySelector("#console>p");
     if (el) {
@@ -172,6 +231,12 @@ const Services: React.FC = () => {
         </button>
         <button onClick={sendTransaction} style={styles.card}>
           Send Transaction
+        </button>
+        <button onClick={fetchAccountAttestations} style={styles.card}>
+          Fetch attestations
+        </button>
+        <button onClick={createAttestation} style={styles.card}>
+          Create attestation
         </button>
         <button onClick={logout} style={styles.card}>
           Log Out

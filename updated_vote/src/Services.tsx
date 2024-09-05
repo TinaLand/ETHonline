@@ -357,55 +357,132 @@ const fetchAttestationFromIndexService = async (attestationId: string) => {
     // Implement your logic to handle the voting result
   };
 
+
+  const [showVote, setShowVote] = useState<boolean>(false); // State to manage Vote component visibility
+
+  const toggleVote = () => {
+    // setShowVote(!showVote);
+    setShowVote(true);
+  };
+
+  const hideVote = () => {
+    setShowVote(false);
+  }
+
   const loggedInView = (
     <>
       <div style={styles.buttonContainer}>
-        <button onClick={getUserInfo} style={styles.card}>
+        <button onClick={() => {
+            toggleVote();
+            hideVote(); // Add any other function you want to call
+          }}  
+          style={styles.card}>
+           
           Get User Info
         </button>
-        <button onClick={getAccounts} style={styles.card}>
+        <button onClick={() => {
+            getAccounts();
+            hideVote(); 
+          }}  
+          style={styles.card}>
           Get Accounts
         </button>
-        <button onClick={getBalance} style={styles.card}>
+
+
+        <button onClick={() => {
+            getBalance();
+            hideVote(); 
+          }}  
+          style={styles.card}>
           Get Balance
         </button>
-        <button onClick={signMessage} style={styles.card}>
+
+        <button onClick={() => {
+            signMessage();
+            hideVote(); 
+          }}  
+          style={styles.card}>
+
           Sign Message
         </button>
-        <button onClick={sendTransaction} style={styles.card}>
+
+        <button onClick={() => {
+            sendTransaction();
+            hideVote(); 
+          }}  
+          style={styles.card}>
+
           Send Transaction
         </button>
-        <button onClick={createAttestation} style={styles.card}>
+
+        <button onClick={() => {
+            createAttestation();
+            hideVote(); 
+          }}  
+          style={styles.card}>
           Create attestation
         </button>
-        <button onClick={fetchAccountAttestations} style={styles.card}>
+
+        <button onClick={() => {
+            fetchAccountAttestations();
+            hideVote(); 
+          }}  
+          style={styles.card}>
           Fetch attestations
         </button>
-        <button onClick={createSchema} style={styles.card}>
+
+
+        <button onClick={() => {
+            createSchema();
+            hideVote(); 
+          }}  
+          style={styles.card}>
           Create schema
         </button>
 
-        <button onClick={fetchSchemaListFromIndexService} style={styles.card}>
+        <button onClick={() => {
+            fetchSchemaListFromIndexService();
+            hideVote(); 
+          }}  
+          style={styles.card}>
         fetch Schema List From Index Service
         </button>
 
-        <button onClick={fetchSchemaFromIndexService} style={styles.card}>
+        <button onClick={() => {
+            fetchSchemaFromIndexService();
+            hideVote(); 
+          }}  
+          style={styles.card}>
           fetch Schema From Index Service
         </button>
 
-        <button onClick={fetchAttestationListFromIndexService} style={styles.card}>
+        <button onClick={() => {
+            fetchAttestationListFromIndexService();
+            hideVote(); 
+          }}  
+          style={styles.card}>
         fetch Attestation List From Index Service
         </button>
 
-        <button onClick={fetchAttestationFromIndexService} style={styles.card}>
+        <button onClick={() => {
+            fetchAttestationFromIndexService();
+            hideVote(); 
+          }}  
+          style={styles.card}>
         fetch Attestation From Index Service
         </button>
+
+        <button onClick={toggleVote} style={styles.card}>
+        Vote
+        </button>
+        {showVote && <Vote refreshCandidates={() => {}} />}
+
 
         <button onClick={logout} style={styles.card}>
           Log Out
         </button>
       </div>
-      <Vote refreshCandidates={refreshCandidates} />
+      {/* <Vote refreshCandidates={refreshCandidates} /> */}
       <div id="console" style={{ whiteSpace: "pre-line" }}>
         <p style={{ whiteSpace: "pre-line" }}></p>
       </div>

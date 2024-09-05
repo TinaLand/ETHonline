@@ -10,7 +10,7 @@ import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
 import EthereumRPC from "./ethereumRPC";
 import SignClient from "./signClient";
 import { IndexService } from "@ethsign/sp-sdk";
-
+import Candidates from "./Candidates";
 
 
 const clientId = "BPi5PB_UiIZ-cPz1GtV5i1I2iOSOHuimiXBI0e-Oe_u6X3oVAbCiAZOTEBtTXw4tsluTITPqA8zMsfxIKMjiqNQ";
@@ -352,10 +352,30 @@ const fetchAttestationFromIndexService = async (attestationId: string) => {
     }
   }
 
-  const refreshCandidates = (candidateId: number) => {
-    console.log(`Voted for candidate ${candidateId}`);
-    // Implement your logic to handle the voting result
-  };
+  // const refreshCandidates = (candidateId: number) => {
+  //   console.log(`Voted for candidate ${candidateId}`);
+  //   // Implement your logic to handle the voting result
+  // };
+
+
+  const [candidates, setCandidates] = useState([
+    { id: 1, name: 'Candidate 1', votes: 10 },
+    { id: 2, name: 'Candidate 2', votes: 20 },
+    { id: 3, name: 'Candidate 3', votes: 5 }
+]);
+const [hasVoted, setHasVoted] = useState(false);
+
+const refreshCandidates = (votedCandidateId) => {
+    setCandidates((prevCandidates) => 
+        prevCandidates.map((candidate) =>
+            candidate.id === votedCandidateId
+                ? { ...candidate, votes: candidate.votes + 1 }
+                : candidate
+        )
+    );
+    setHasVoted(true); // Ensure the user can't vote again
+};
+
 
 
   const [showVote, setShowVote] = useState<boolean>(false); // State to manage Vote component visibility
@@ -373,8 +393,8 @@ const fetchAttestationFromIndexService = async (attestationId: string) => {
     <>
       <div style={styles.buttonContainer}>
         <button onClick={() => {
-            toggleVote();
-            hideVote(); // Add any other function you want to call
+            getUserInfo();
+            hideVote(); 
           }}  
           style={styles.card}>
            
@@ -475,8 +495,14 @@ const fetchAttestationFromIndexService = async (attestationId: string) => {
         <button onClick={toggleVote} style={styles.card}>
         Vote
         </button>
-        {showVote && <Vote refreshCandidates={() => {}} />}
 
+        {showVote && 
+          <>
+            <Vote refreshCandidates={refreshCandidates} />
+            <Candidates candidates={candidates} />
+          </>
+
+        }
 
         <button onClick={logout} style={styles.card}>
           Log Out

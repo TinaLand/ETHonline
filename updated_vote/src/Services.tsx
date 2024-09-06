@@ -11,6 +11,8 @@ import EthereumRPC from "./ethereumRPC";
 import SignClient from "./signClient";
 import { IndexService } from "@ethsign/sp-sdk";
 import Candidates from "./Candidates";
+import Donate from "./donate";
+import Home from "./Home";
 
 
 const clientId = "BPi5PB_UiIZ-cPz1GtV5i1I2iOSOHuimiXBI0e-Oe_u6X3oVAbCiAZOTEBtTXw4tsluTITPqA8zMsfxIKMjiqNQ";
@@ -60,7 +62,6 @@ const Vote: React.FC<{ refreshCandidates: (candidateId: number) => void }> = ({ 
 
   return (
     <div>
-      <h2>Vote</h2>
       <input
         type="number"
         value={candidateId}
@@ -378,10 +379,8 @@ const refreshCandidates = (votedCandidateId) => {
 
 
 
-  const [showVote, setShowVote] = useState<boolean>(false); // State to manage Vote component visibility
-
+  const [showVote, setShowVote] = useState<boolean>(false); 
   const toggleVote = () => {
-    // setShowVote(!showVote);
     setShowVote(true);
   };
 
@@ -500,7 +499,14 @@ const refreshCandidates = (votedCandidateId) => {
           <>
             <Vote refreshCandidates={refreshCandidates} />
             <Candidates candidates={candidates} />
+            <Donate
+              recipientAddress="0x653FAceAECeAA5186d8e8835ba89f150C3CeC144" // Replace with actual recipient address
+              // onSuccess={handleSuccess}
+              // onError={handleError}
+            />
           </>
+  
+        
 
         }
 
@@ -516,17 +522,25 @@ const refreshCandidates = (votedCandidateId) => {
   );
 
   const unloggedInView = (
-    <div style={styles.loginContainer}>
+    <>
+    <Home />
+      <button onClick={login} style={{ ...styles.card, ...styles.loginButton }}>
+        Login
+      </button>
+
+    {/* <div style={styles.loginContainer}>
       <img
         src="https://media.istockphoto.com/id/1252900502/vector/banner-set-of-election-ballot-box-with-a-combination-of-american-flag.jpg?s=612x612&w=0&k=20&c=NcGfnsznn9Ta1irfKS-hB3eCpxWhIqdAyfZP1UFp1Vo="
         alt="Voting Banner"
         style={styles.loginImage}
       />
-
+      
       <button onClick={login} style={{ ...styles.card, ...styles.loginButton }}>
         Login
       </button>
-    </div>
+    </div> */}
+    </>
+
   );
 
   return (

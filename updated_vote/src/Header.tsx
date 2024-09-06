@@ -75,6 +75,7 @@ const Header: React.FC<HeaderProps> = () => {
                 <div style={styles.logo}>The Great Vote</div>
                 <nav style={styles.navLinks}>
                     {/* <Link to="/" style={styles.navLink}>Home</Link> */}
+                    <Link to="/" style={styles.navLink}>Dashboard</Link>
                     <Link to="/services" style={styles.navLink}>Services</Link>
                     <Link to="/about" style={styles.navLink}>About</Link>
                     <Link to="/contact" style={styles.navLink}>Contact</Link>

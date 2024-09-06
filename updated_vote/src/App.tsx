@@ -7,6 +7,7 @@ import Home from './Home';
 import About from './About';
 import Services from './Services';
 import Contact from './Contact';
+import Dashboard from "./Dashboard";
 
 const App: React.FC = () => {
   const location = useLocation();
@@ -17,6 +18,7 @@ const App: React.FC = () => {
       <div className="main-content">
         <Routes>
           {/* <Route path="/" element={<Home />} /> */}
+          <Route path="/" element={<Dashboard />} />
           <Route path="/about" element={<About />} />
           <Route path="/services" element={<Services />} />
           <Route path="/contact" element={<Contact />} />

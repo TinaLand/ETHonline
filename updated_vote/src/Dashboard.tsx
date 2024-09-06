@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import ProfileContent from './ProfileContent';
 
 // Inline Styles
 const styles = {
@@ -120,12 +121,12 @@ const Dashboard: React.FC = () => {
 };
 
 // Example content components
-const ProfileContent = () => (
-  <div>
-    <h3>Profile</h3>
-    <p>Your profile details go here.</p>
-  </div>
-);
+// const ProfileContent = () => (
+//   <div>
+//     <h3>Profile</h3>
+//     <p>Your profile details go here.</p>
+//   </div>
+// );
 
 const HistoryContent = () => (
   <div>

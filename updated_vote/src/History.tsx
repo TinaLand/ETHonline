@@ -102,26 +102,6 @@ const generateMockData = (): VoteHistory[] => {
   const donateTypes = ["ETH", "BTC", "Tether"];
   const mockData: VoteHistory[] = [];
 
-  for (let i = 0; i < 10; i++) {
-    const startDate = new Date("2022-01-01T00:00:00Z");
-    const randomDays = Math.floor(Math.random() * 365 * 3); // Up to 3 years worth of days (for years 2020, 2021, and 2022)
-    const timestamp = new Date(startDate.getTime() - randomDays * 24 * 60 * 60 * 1000).toISOString();
-
-    const donationAmount = parseFloat((Math.random() * 100).toFixed(3));
-    const isWinning = Math.random() > 0.5; // Randomly decide if the result is "Successful" or "Failed"
-    const winAmount = isWinning ? donationAmount * 1.5 : 0; // Calculate win amount (for example, 1.5 times the donation amount if successful)
-
-    mockData.push({
-      id: `id${i}`,
-      timestamp,
-      candidate: candidates[Math.floor(Math.random() * candidates.length)],
-      donationAmount,
-      donationType: donateTypes[Math.floor(Math.random() * donateTypes.length)],
-      result: results[Math.floor(Math.random() * results.length)],
-      winAmount,
-    });
-  }
-
     // // Retrieve and parse the newVote data from localStorage
     const storedVote = localStorage.getItem("newVote");
 
@@ -145,6 +125,26 @@ const generateMockData = (): VoteHistory[] => {
     } else {
     console.error("No newVote data found in localStorage");
     }
+
+  for (let i = 0; i < 10; i++) {
+    const startDate = new Date("2022-01-01T00:00:00Z");
+    const randomDays = Math.floor(Math.random() * 365 * 3); // Up to 3 years worth of days (for years 2020, 2021, and 2022)
+    const timestamp = new Date(startDate.getTime() - randomDays * 24 * 60 * 60 * 1000).toISOString();
+
+    const donationAmount = parseFloat((Math.random() * 100).toFixed(3));
+    const isWinning = Math.random() > 0.5; // Randomly decide if the result is "Successful" or "Failed"
+    const winAmount = isWinning ? donationAmount * 1.5 : 0; // Calculate win amount (for example, 1.5 times the donation amount if successful)
+
+    mockData.push({
+      id: `id${i}`,
+      timestamp,
+      candidate: candidates[Math.floor(Math.random() * candidates.length)],
+      donationAmount,
+      donationType: donateTypes[Math.floor(Math.random() * donateTypes.length)],
+      result: results[Math.floor(Math.random() * results.length)],
+      winAmount,
+    });
+  }
 
   return mockData;
 };

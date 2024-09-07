@@ -52,7 +52,7 @@ const VotePage: React.FC = () => {
         return {
           ...candidate,
           votes: candidate.votes + 1,
-          donationAmount: candidate.donationAmount + amount,
+          donationAmount: amount,
         };
       }
       return candidate;

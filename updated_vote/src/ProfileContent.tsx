@@ -177,34 +177,3 @@ const styles = {
 };
 
 export default ProfileContent;
-
-
-
-
-// const ProfileContent: React.FC = () => {
-//   return (
-//     <div style={styles.container}>
-//       {/* <h3 style={styles.heading}>Profile</h3> */}
-//       <div style={styles.card}>
-//         <div style={styles.cardContent}>
-//           <div style={styles.field}>
-//             <span style={styles.label}>Name:</span>
-//             <span style={styles.value}>{profileData.name}</span>
-//           </div>
-//           <div style={styles.field}>
-//             <span style={styles.label}>Email:</span>
-//             <span style={styles.value}>{profileData.email}</span>
-//           </div>
-//           <div style={styles.field}>
-//             <span style={styles.label}>Account Address:</span>
-//             <span style={styles.value}>{profileData.accountAddress}</span>
-//           </div>
-//           <div style={styles.field}>
-//             <span style={styles.label}>Balance:</span>
-//             <span style={styles.value}>{profileData.balance}</span>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };

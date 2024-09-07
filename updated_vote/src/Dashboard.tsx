@@ -66,8 +66,8 @@ const Dashboard: React.FC = () => {
       case 'vote':
         //return <VoteContent />;
         return <VotePage />;
-      case 'share':
-        return <ShareContent />;
+      // case 'share':
+      //   return <ShareContent />;
       default:
         return <ProfileContent />;
     }
@@ -105,7 +105,7 @@ const Dashboard: React.FC = () => {
         >
           History
         </button>
-        <button
+        {/* <button
           style={{
             ...styles.button,
             ...(activeTab === 'share' ? styles.buttonActive : {})
@@ -113,7 +113,7 @@ const Dashboard: React.FC = () => {
           onClick={() => setActiveTab('share')}
         >
           Social Media Share
-        </button>
+        </button> */}
 
         <button
           style={{

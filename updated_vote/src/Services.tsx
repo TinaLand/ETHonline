@@ -110,6 +110,8 @@ const Services: React.FC = () => {
   const getUserInfo = async () => {
     const user = await web3auth.getUserInfo();
     uiConsole(user);
+    // uiConsole(user.name);
+    // uiConsole(user.email);
   };
 
   const logout = async () => {
@@ -344,7 +346,6 @@ const fetchAttestationFromIndexService = async (attestationId: string) => {
   }
 };
 
-
   function uiConsole(...args: any[]): void {
     const el = document.querySelector("#console>p");
     if (el) {
@@ -376,8 +377,6 @@ const refreshCandidates = (votedCandidateId) => {
     );
     setHasVoted(true); // Ensure the user can't vote again
 };
-
-
 
   const [showVote, setShowVote] = useState<boolean>(false); 
   const toggleVote = () => {
@@ -505,9 +504,6 @@ const refreshCandidates = (votedCandidateId) => {
               // onError={handleError}
             />
           </>
-  
-        
-
         }
 
         <button onClick={logout} style={styles.card}>

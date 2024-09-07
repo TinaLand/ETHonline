@@ -110,6 +110,17 @@ const Dashboard: React.FC = () => {
         >
           Social Media Share
         </button>
+
+        <button
+          style={{
+            ...styles.button,
+            ...(activeTab === 'logout' ? styles.buttonActive : {})
+          }}
+          onClick={() => setActiveTab('logout')}
+        >
+          Logout
+        </button>
+
       </div>
 
       {/* Content Area */}
@@ -120,13 +131,6 @@ const Dashboard: React.FC = () => {
   );
 };
 
-// Example content components
-// const ProfileContent = () => (
-//   <div>
-//     <h3>Profile</h3>
-//     <p>Your profile details go here.</p>
-//   </div>
-// );
 
 const HistoryContent = () => (
   <div>

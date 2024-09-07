@@ -116,11 +116,35 @@ const generateMockData = (): VoteHistory[] => {
       timestamp,
       candidate: candidates[Math.floor(Math.random() * candidates.length)],
       donationAmount,
-      donateType: donateTypes[Math.floor(Math.random() * donateTypes.length)],
+      donationType: donateTypes[Math.floor(Math.random() * donateTypes.length)],
       result: results[Math.floor(Math.random() * results.length)],
       winAmount,
     });
   }
+
+    // // Retrieve and parse the newVote data from localStorage
+    const storedVote = localStorage.getItem("newVote");
+
+    if (storedVote) {
+    // Parse the storedVote data
+    const parsedVote = JSON.parse(storedVote);
+
+    // Create a new entry with polished code
+    mockData.push({
+        id: "11", // Or any unique ID you wish to assign
+        timestamp: new Date().toISOString(), // Use the current date-time as timestamp
+        candidate: parsedVote.name, // Access the candidate name from parsedVote
+        donationAmount: parsedVote.donationAmount, // Access the donation amount from parsedVote
+        donationType: donateTypes[Math.floor(Math.random() * donateTypes.length)], // Randomly select a donation type
+        result: "pending", // Static result value
+        winAmount: 0, // Static win amount value
+    });
+
+    // Optional: Log the updated mockData array to verify
+    console.log(mockData);
+    } else {
+    console.error("No newVote data found in localStorage");
+    }
 
   return mockData;
 };

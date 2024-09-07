@@ -35,6 +35,7 @@ const VotePage: React.FC = () => {
 
   useEffect(() => {
     // Load candidates and vote status from localStorage
+    localStorage.clear()
     const savedCandidates = localStorage.getItem("candidates");
     const savedHasVoted = localStorage.getItem("hasVoted");
 
@@ -59,6 +60,24 @@ const VotePage: React.FC = () => {
 
     setCandidates(updatedCandidates);
     localStorage.setItem("candidates", JSON.stringify(updatedCandidates));
+
+
+    const latestUpdatedCandidate = candidates.find(candidate => candidate.id === candidateId);
+    
+    if (latestUpdatedCandidate) {
+      // Update the candidate's votes and donation amount
+      const updatedData = {
+        ...latestUpdatedCandidate,
+        votes: latestUpdatedCandidate.votes + 1,
+        donationAmount: latestUpdatedCandidate.donationAmount + amount,
+      };
+  
+      // Save only the updated candidate to local storage
+      localStorage.setItem(`newVote`, JSON.stringify(updatedData));
+      console.log(localStorage.getItem(`newVote`));
+    }
+
+
   };
 
   const handleVote = () => {

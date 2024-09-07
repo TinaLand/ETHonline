@@ -22,9 +22,9 @@ const VotePage: React.FC = () => {
 
   // Sample candidates and cryptocurrency types
   const [candidates, setCandidates] = useState<Candidate[]>([
-    { id: 1, name: "Alice", votes: 5, donationAmount: 10 }, // Initial values
-    { id: 2, name: "Bob", votes: 3, donationAmount: 20 },   // Initial values
-    { id: 3, name: "Charlie", votes: 8, donationAmount: 15 }, // Initial values
+    { id: 1, name: "Alice", votes: 5, donationAmount: 10 },
+    { id: 2, name: "Bob", votes: 3, donationAmount: 20 },
+    { id: 3, name: "Charlie", votes: 8, donationAmount: 15 },
   ]);
 
   const cryptoTypes: CryptoType[] = [
@@ -34,10 +34,32 @@ const VotePage: React.FC = () => {
   ];
 
   useEffect(() => {
-    // Check if the user has already voted
-    const voted = localStorage.getItem("hasVoted");
-    setHasVoted(voted === "true");
+    // Load candidates and vote status from localStorage
+    const savedCandidates = localStorage.getItem("candidates");
+    const savedHasVoted = localStorage.getItem("hasVoted");
+
+    if (savedCandidates) {
+      setCandidates(JSON.parse(savedCandidates));
+    }
+
+    setHasVoted(savedHasVoted === "true");
   }, []);
+
+  const updateCandidateData = (candidateId: number, amount: number) => {
+    const updatedCandidates = candidates.map((candidate) => {
+      if (candidate.id === candidateId) {
+        return {
+          ...candidate,
+          votes: candidate.votes + 1,
+          donationAmount: candidate.donationAmount + amount,
+        };
+      }
+      return candidate;
+    });
+
+    setCandidates(updatedCandidates);
+    localStorage.setItem("candidates", JSON.stringify(updatedCandidates));
+  };
 
   const handleVote = () => {
     if (hasVoted) {
@@ -50,21 +72,10 @@ const VotePage: React.FC = () => {
       return;
     }
 
-    // Update the selected candidate's vote and donation amount
-    const updatedCandidates = candidates.map((candidate) => {
-      if (candidate.id === selectedCandidate) {
-        return {
-          ...candidate,
-          votes: candidate.votes + 1,
-          donationAmount: candidate.donationAmount + donationAmount,
-        };
-      }
-      return candidate;
-    });
+    // Update candidate data
+    updateCandidateData(selectedCandidate, parseFloat(donationAmount as string));
 
-    setCandidates(updatedCandidates);
-
-    // Mark user as voted
+    // Save vote status to localStorage
     localStorage.setItem("hasVoted", "true");
     setHasVoted(true);
 
@@ -243,25 +254,26 @@ const styles = {
   },
   resultsHeading: {
     fontSize: "1.8rem",
-    marginBottom: "15px",
+    marginBottom: "20px",
     color: "#333",
     fontWeight: "bold",
   },
   resultsContainer: {
     display: "flex",
     flexDirection: "column" as "column",
-    gap: "10px",
+    gap: "15px",
   },
   resultCard: {
     backgroundColor: "#fff",
     padding: "15px",
     borderRadius: "8px",
     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+    border: "1px solid #ddd",
   },
   candidateName: {
-    fontSize: "1.5rem",
-    marginBottom: "5px",
-    color: "#333",
+    fontSize: "1.3rem",
+    fontWeight: "bold",
+    marginBottom: "10px",
   },
   candidateInfo: {
     fontSize: "1.1rem",

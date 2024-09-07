@@ -4,15 +4,8 @@ import Footer from './Footer';
 import { CHAIN_NAMESPACES, IProvider, WEB3AUTH_NETWORK, WALLET_ADAPTERS } from "@web3auth/base";
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { Web3Auth } from "@web3auth/modal";
-import RPC from "./ethersRPC";
-import { Web3AuthNoModal } from "@web3auth/no-modal";
 import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
 import EthereumRPC from "./ethereumRPC";
-import SignClient from "./signClient";
-import { IndexService } from "@ethsign/sp-sdk";
-import Candidates from "./Candidates";
-import Donate from "./donate";
-import Home from "./Home";
 
 const clientId = "BPi5PB_UiIZ-cPz1GtV5i1I2iOSOHuimiXBI0e-Oe_u6X3oVAbCiAZOTEBtTXw4tsluTITPqA8zMsfxIKMjiqNQ";
 
@@ -53,21 +46,23 @@ const ProfileContent: React.FC = () => {
     const init = async () => {
       try {
         await web3auth.initModal();
-        setProvider(web3auth.provider);
-
-        if (web3auth.connected) {
-          await loadProfileData();
+        const currentProvider = web3auth.provider;
+        if (currentProvider) {
+          setProvider(currentProvider);
+          await loadProfileData(currentProvider);
+        } else {
+          console.log("Provider not available");
         }
       } catch (error) {
-        console.error(error);
+        console.error("Initialization error:", error);
       }
     };
 
-    const loadProfileData = async () => {
+    const loadProfileData = async (provider: IProvider) => {
       try {
         const userInfo = await getUserInfo();
-        const accountAddress = await getAccounts();
-        const balance = await getBalance();
+        const accountAddress = await getAccounts(provider);
+        const balance = await getBalance(provider);
 
         setProfileData({
           name: userInfo?.name || 'N/A',
@@ -84,28 +79,32 @@ const ProfileContent: React.FC = () => {
   }, []);
 
   const getUserInfo = async () => {
-    const user = await web3auth.getUserInfo();
-    return user;
+    try {
+      const user = await web3auth.getUserInfo();
+      return user;
+    } catch (error) {
+      console.error('Error getting user info:', error);
+    }
   };
 
-  const getAccounts = async () => {
-    if (!provider) {
-      console.log("provider not initialized yet");
-      return;
+  const getAccounts = async (provider: IProvider) => {
+    try {
+      const ethereumRPC = new EthereumRPC(provider);
+      const address = await ethereumRPC.getAccount();
+      return address;
+    } catch (error) {
+      console.error('Error getting accounts:', error);
     }
-    const ethereumRPC = new EthereumRPC(provider!);
-    const address = await ethereumRPC.getAccount();
-    return address;
   };
 
-  const getBalance = async () => {
-    if (!provider) {
-      console.log("provider not initialized yet");
-      return;
+  const getBalance = async (provider: IProvider) => {
+    try {
+      const ethereumRPC = new EthereumRPC(provider);
+      const balance = await ethereumRPC.fetchBalance();
+      return balance;
+    } catch (error) {
+      console.error('Error fetching balance:', error);
     }
-    const ethereumRPC = new EthereumRPC(provider!);
-    const balance = await ethereumRPC.fetchBalance();
-    return balance;
   };
 
   return (

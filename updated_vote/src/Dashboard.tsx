@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ProfileContent from './ProfileContent';
+import VotePage from './VotePage';
 
 // Inline Styles
 const styles = {
@@ -61,7 +62,8 @@ const Dashboard: React.FC = () => {
       case 'history':
         return <HistoryContent />;
       case 'vote':
-        return <VoteContent />;
+        //return <VoteContent />;
+        return <VotePage />;
       case 'share':
         return <ShareContent />;
       default:
@@ -139,12 +141,12 @@ const HistoryContent = () => (
   </div>
 );
 
-const VoteContent = () => (
-  <div>
-    <h3>Vote</h3>
-    <p>Voting functionality details go here.</p>
-  </div>
-);
+// const VoteContent = () => (
+//   <div>
+//     <h3>Vote</h3>
+//     <p>Voting functionality details go here.</p>
+//   </div>
+// );
 
 const ShareContent = () => (
   <div>

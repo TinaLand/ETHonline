@@ -86,20 +86,20 @@ const Dashboard: React.FC = () => {
         <button
           style={{
             ...styles.button,
-            ...(activeTab === 'history' ? styles.buttonActive : {})
-          }}
-          onClick={() => setActiveTab('history')}
-        >
-          History
-        </button>
-        <button
-          style={{
-            ...styles.button,
             ...(activeTab === 'vote' ? styles.buttonActive : {})
           }}
           onClick={() => setActiveTab('vote')}
         >
           Vote
+        </button>
+        <button
+          style={{
+            ...styles.button,
+            ...(activeTab === 'history' ? styles.buttonActive : {})
+          }}
+          onClick={() => setActiveTab('history')}
+        >
+          History
         </button>
         <button
           style={{

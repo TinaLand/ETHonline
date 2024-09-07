@@ -23,6 +23,27 @@ const HistoryPage: React.FC = () => {
     localStorage.setItem("voteHistory", JSON.stringify(mockHistory));
   }, []);
 
+  // Function to generate social media share URLs
+  const getShareUrl = (platform: string, text: string, url: string) => {
+    const encodedText = encodeURIComponent(text);
+    const encodedUrl = encodeURIComponent(url);
+    switch (platform) {
+      case "twitter":
+        return `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`;
+      case "facebook":
+        return `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+      case "linkedin":
+        return `https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}&title=${encodedText}`;
+      case "instagram":
+        return `https://www.instagram.com/`;
+      default:
+        return "#";
+    }
+  };
+
+  const shareText = "Check out the latest vote history on our app!";
+  const pageUrl = window.location.href; // Current page URL
+
   return (
     <div style={styles.container}>
       <h1 style={styles.heading}>Vote History</h1>
@@ -31,52 +52,65 @@ const HistoryPage: React.FC = () => {
           <thead>
             <tr>
               <th style={styles.tableHeader}>Timestamp</th>
-              {/* <th style={styles.tableHeader}>User</th> */}
               <th style={styles.tableHeader}>Candidate</th>
-              <th style={styles.tableHeader}>Donation cypto type</th>
+              <th style={styles.tableHeader}>Donation Type</th>
               <th style={styles.tableHeader}>Donation Amount</th>
               <th style={styles.tableHeader}>Result</th>
-              <th style={styles.tableHeader}>Win amount</th>
-
+              <th style={styles.tableHeader}>Win Amount</th>
             </tr>
           </thead>
           <tbody>
             {history.map((entry) => (
-                <tr key={entry.id}>
+              <tr key={entry.id}>
                 <td style={styles.tableCell}>{new Date(entry.timestamp).toLocaleString()}</td>
                 <td style={styles.tableCell}>{entry.candidate}</td>
+                <td style={styles.tableCell}>{entry.donationType}</td>
                 <td style={styles.tableCell}>{entry.donationAmount.toFixed(3)}</td>
-                <td style={styles.tableCell}>{entry.donateType}</td>
                 <td style={styles.tableCell}>{entry.result}</td>
                 <td style={styles.tableCell}>{entry.winAmount.toFixed(3)}</td>
-            </tr>
+              </tr>
             ))}
           </tbody>
         </table>
+
+        <div style={styles.shareContainer}>
+        <h2 style={styles.shareHeading}>Share This Page</h2>
+        <a href={getShareUrl("twitter", shareText, pageUrl)} target="_blank" rel="noopener noreferrer" style={styles.shareButton}>
+          Share on X (Twitter)
+        </a>
+        <a href={getShareUrl("facebook", shareText, pageUrl)} target="_blank" rel="noopener noreferrer" style={styles.shareButton}>
+          Share on Facebook
+        </a>
+        <a href={getShareUrl("linkedin", shareText, pageUrl)} target="_blank" rel="noopener noreferrer" style={styles.shareButton}>
+          Share on LinkedIn
+        </a>
+        <a href={getShareUrl("instagram", shareText, pageUrl)} target="_blank" rel="noopener noreferrer" style={styles.shareButton}>
+          Share on Instagram
+        </a>
       </div>
+      
+      </div>
+
     </div>
   );
 };
 
 // Function to generate mock data
 const generateMockData = (): VoteHistory[] => {
-//   const users = ["Alice", "Bob", "Charlie", "David", "Eve"];
   const candidates = ["Alice", "Bob", "Charlie"];
   const results = ["Successful", "Failed"];
-  const donateTypes = ["ETH", "BTC", "Tether"]
+  const donateTypes = ["ETH", "BTC", "Tether"];
   const mockData: VoteHistory[] = [];
 
-for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 10; i++) {
     const startDate = new Date("2022-01-01T00:00:00Z");
     const randomDays = Math.floor(Math.random() * 365 * 3); // Up to 3 years worth of days (for years 2020, 2021, and 2022)
     const timestamp = new Date(startDate.getTime() - randomDays * 24 * 60 * 60 * 1000).toISOString();
-  
+
     const donationAmount = parseFloat((Math.random() * 100).toFixed(3));
     const isWinning = Math.random() > 0.5; // Randomly decide if the result is "Successful" or "Failed"
     const winAmount = isWinning ? donationAmount * 1.5 : 0; // Calculate win amount (for example, 1.5 times the donation amount if successful)
-  
-    console.log(`Donation Amount: ${donationAmount}, Is Winning: ${isWinning}, Win Amount: ${winAmount}`); // Debug log
-  
+
     mockData.push({
       id: `id${i}`,
       timestamp,
@@ -87,7 +121,6 @@ for (let i = 0; i < 10; i++) {
       winAmount,
     });
   }
-  
 
   return mockData;
 };
@@ -123,6 +156,24 @@ const styles = {
   tableCell: {
     borderBottom: "1px solid #ddd",
     padding: "10px",
+  },
+  shareContainer: {
+    marginTop: "20px",
+    textAlign: "center" as "center",
+  },
+  shareHeading: {
+    fontSize: "1.5rem",
+    marginBottom: "10px",
+  },
+  shareButton: {
+    display: "inline-block",
+    margin: "0 10px",
+    padding: "10px 20px",
+    fontSize: "1rem",
+    color: "#fff",
+    backgroundColor: "#007bff",
+    borderRadius: "5px",
+    textDecoration: "none",
   },
 };
 

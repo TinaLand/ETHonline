@@ -35,7 +35,7 @@ const VotePage: React.FC = () => {
 
   useEffect(() => {
     // Load candidates and vote status from localStorage
-    localStorage.clear()
+    // localStorage.clear()
     const savedCandidates = localStorage.getItem("candidates");
     const savedHasVoted = localStorage.getItem("hasVoted");
 
@@ -52,7 +52,7 @@ const VotePage: React.FC = () => {
         return {
           ...candidate,
           votes: candidate.votes + 1,
-          donationAmount: amount,
+          donationAmount: candidate.donationAmount + amount,
         };
       }
       return candidate;
@@ -69,7 +69,7 @@ const VotePage: React.FC = () => {
       const updatedData = {
         ...latestUpdatedCandidate,
         votes: latestUpdatedCandidate.votes + 1,
-        donationAmount: latestUpdatedCandidate.donationAmount + amount,
+        donationAmount: amount,
       };
   
       // Save only the updated candidate to local storage

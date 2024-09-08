@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Header from './Header';
 import Footer from './Footer';
-import { CHAIN_NAMESPACES, IProvider, WEB3AUTH_NETWORK, WALLET_ADAPTERS } from '@web3auth/base';
+import { CHAIN_NAMESPACES, IProvider, WEB3AUTH_NETWORK } from '@web3auth/base';
 import { EthereumPrivateKeyProvider } from '@web3auth/ethereum-provider';
 import { Web3Auth } from '@web3auth/modal';
 import { OpenloginAdapter } from '@web3auth/openlogin-adapter';
@@ -186,43 +186,79 @@ const Signature: React.FC = () => {
   const loggedInView = (
     <>
       <div style={styles.buttonContainer}>
-        <button onClick={fetchAccountAttestations} style={styles.card}>Fetch Attestations</button>
-        <button onClick={fetchSchemaListFromIndexService} style={styles.card}>Fetch Schema List From Index Service</button>
-        <button onClick={fetchSchemaFromIndexService} style={styles.card}>Fetch Schema From Index Service</button>
-        <button onClick={fetchAttestationListFromIndexService} style={styles.card}>Fetch Attestation List From Index Service</button>
-        <button onClick={fetchAttestationFromIndexService} style={styles.card}>Fetch Attestation From Index Service</button>
+        <button onClick={fetchAccountAttestations} style={styles.button}>Fetch Attestations</button>
+        <button onClick={fetchSchemaListFromIndexService} style={styles.button}>Fetch Schema List</button>
+        <button onClick={fetchSchemaFromIndexService} style={styles.button}>Fetch Schema</button>
+        <button onClick={fetchAttestationListFromIndexService} style={styles.button}>Fetch Attestation List</button>
+        <button onClick={fetchAttestationFromIndexService} style={styles.button}>Fetch Attestation</button>
       </div>
-      <div id="console" style={{ whiteSpace: "pre-line" }}></div>
+      <div id="console" style={styles.console}></div>
     </>
   );
 
   return (
-    <div>
-      <Header />
-      <div style={styles.container}>
-        <h1>Vote and Donate</h1>
+    <div style={styles.container}>
+      <main>
         {loggedInView}
-      </div>
-      <Footer />
+      </main>
     </div>
   );
 };
 
 const styles = {
   container: {
+    fontFamily: 'Arial, sans-serif',
+    color: '#333',
+    backgroundColor: '#f4f4f4',
+    minHeight: '100vh',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
     padding: '20px',
   },
   buttonContainer: {
+    display: 'flex',
+    flexDirection: 'row', // Change to row for horizontal layout
+    flexWrap: 'wrap', // Allow wrapping if necessary
+    justifyContent: 'center', // Center horizontally
     marginBottom: '20px',
   },
-  card: {
+  button: {
     margin: '10px',
-    padding: '10px',
-    border: '1px solid #ddd',
-    borderRadius: '5px',
+    padding: '12px 24px',
+    border: 'none',
+    borderRadius: '8px',
     cursor: 'pointer',
-    backgroundColor: 'white',
-    zIndex: 1,
+    backgroundColor: '#007bff',
+    color: '#fff',
+    fontSize: '16px',
+    transition: 'background-color 0.3s ease',
+  },
+  buttonHover: {
+    backgroundColor: '#0056b3',
+  },
+  console: {
+    width: '100%',
+    maxWidth: '800px',
+    backgroundColor: '#fff',
+    padding: '20px',
+    borderRadius: '8px',
+    boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+    overflowY: 'auto',
+    maxHeight: '500px',
+  },
+  consoleEntry: {
+    marginBottom: '10px',
+    padding: '10px',
+    borderRadius: '4px',
+  },
+  success: {
+    backgroundColor: '#d4edda',
+    color: '#155724',
+  },
+  error: {
+    backgroundColor: '#f8d7da',
+    color: '#721c24',
   },
 };
 

@@ -96,10 +96,30 @@ const styles = {
     fontSize: "1em",
   },
   loginButton: {
-    marginTop: "0",
     width: "200px",
-    padding: "10px",
+    padding: "15px",
     fontSize: "1.2em",
+    backgroundColor: "#007bff",
+    border: "none",
+    borderRadius: "8px",
+    color: "#fff",
+    cursor: "pointer",
+    transition: "background-color 0.3s ease, transform 0.2s ease",
+    margin: "10px auto",
+    display: "block",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+  },
+  loginButtonHover: {
+    backgroundColor: "#0056b3",
+    transform: "scale(1.05)",
+  },
+  loginButtonContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'column',
+    minHeight: '100vh',
+    backgroundColor: '#f8f9fa',
   },
 };
 
@@ -107,7 +127,7 @@ const Dashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState('profile');
   const [provider, setProvider] = useState<IProvider | null>(null);
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
-  
+
   useEffect(() => {
     const init = async () => {
       try {
@@ -124,7 +144,7 @@ const Dashboard: React.FC = () => {
 
     init();
   }, []);
-  
+
   const login = async () => {
     try {
       const web3authProvider = await web3auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
@@ -166,12 +186,17 @@ const Dashboard: React.FC = () => {
   };
 
   const unloggedInView = (
-    <>
+    <div style={styles.loginButtonContainer}>
       <Home />
-      <button onClick={login} style={{ ...styles.card, ...styles.loginButton }}>
+      <button
+        onClick={login}
+        style={styles.loginButton}
+        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#0056b3'}
+        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#007bff'}
+      >
         Login
       </button>
-    </>
+    </div>
   );
 
   const loggedInView = (

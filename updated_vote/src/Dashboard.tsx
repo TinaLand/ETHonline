@@ -11,6 +11,7 @@ import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { Web3Auth } from "@web3auth/modal";
 import RPC from "./ethersRPC"; // assuming it's used somewhere else
 import EthereumRPC from "./ethereumRPC"; // assuming it's used somewhere else
+import Signature from "./Signature";
 
 const clientId = "BPi5PB_UiIZ-cPz1GtV5i1I2iOSOHuimiXBI0e-Oe_u6X3oVAbCiAZOTEBtTXw4tsluTITPqA8zMsfxIKMjiqNQ";
 
@@ -157,6 +158,8 @@ const Dashboard: React.FC = () => {
         return <History />;
       case 'vote':
         return <VotePage />;
+      case 'signature':
+        return <Signature />;
       default:
         return <ProfileContent />;
     }
@@ -203,6 +206,16 @@ const Dashboard: React.FC = () => {
         >
           History
         </button>
+        <button
+          style={{
+            ...styles.button,
+            ...(activeTab === 'signature' ? styles.buttonActive : {})
+          }}
+          onClick={() => setActiveTab('signature')}
+        >
+          Signature Verification
+        </button>
+        
         <button
           style={{
             ...styles.button,

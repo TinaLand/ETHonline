@@ -9,9 +9,9 @@ import EthereumRPC from './ethereumRPC';
 import SignClient from './signClient';
 import { IndexService } from '@ethsign/sp-sdk';
 
-const clientId = "BPi5PB_UiIZ-cPz1GtV5i1I2iOSOHuimiXBI0e-Oe_u6X3oVAbCiAZOTEBtTXw4tsluTITPqA8zMsfxIKMjiqNQ";
-
-const chainConfig = {
+// Constants
+const CLIENT_ID = "BPi5PB_UiIZ-cPz1GtV5i1I2iOSOHuimiXBI0e-Oe_u6X3oVAbCiAZOTEBtTXw4tsluTITPqA8zMsfxIKMjiqNQ";
+const CHAIN_CONFIG = {
   chainNamespace: CHAIN_NAMESPACES.EIP155,
   chainId: "0xaa36a7",
   rpcTarget: "https://rpc.ankr.com/eth_sepolia",
@@ -22,12 +22,10 @@ const chainConfig = {
   logo: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
 };
 
-const privateKeyProvider = new EthereumPrivateKeyProvider({
-  config: { chainConfig },
-});
-
+// Initialize providers
+const privateKeyProvider = new EthereumPrivateKeyProvider({ config: { chainConfig: CHAIN_CONFIG } });
 const web3auth = new Web3Auth({
-  clientId,
+  clientId: CLIENT_ID,
   web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
   privateKeyProvider,
 });
@@ -37,19 +35,14 @@ web3auth.configureAdapter(openloginAdapter);
 
 const Signature: React.FC = () => {
   const [provider, setProvider] = useState<IProvider | null>(null);
-//   const [loggedIn, setLoggedIn] = useState<boolean>(false);
 
   useEffect(() => {
     const init = async () => {
       try {
         await web3auth.initModal();
         setProvider(web3auth.provider);
-
-        // if (web3auth.connected) {
-        //   setLoggedIn(true);
-        // }
       } catch (error) {
-        console.error(error);
+        console.error("Initialization error:", error);
       }
     };
 
@@ -59,37 +52,34 @@ const Signature: React.FC = () => {
   const uiConsole = (...args: any[]): void => {
     const el = document.querySelector("#console");
     if (el) {
-      // Clear previous content
-      el.innerHTML = '';
-  
-      // Create a new div for each argument
+      el.innerHTML = ''; // Clear previous content
+
       args.forEach(arg => {
         const div = document.createElement('div');
         div.className = 'console-entry';
-  
-        // Check if the argument is null or undefined, and replace with an empty object
-        const displayValue = arg === null || arg === undefined ? '{}' : JSON.stringify(arg, null, 2);
-  
-        div.textContent = displayValue;
+        div.textContent = arg === null || arg === undefined ? '{}' : JSON.stringify(arg, null, 2);
         el.appendChild(div);
       });
-  
+
       console.log(...args);
     }
   };
-  
 
-
-  const createSchema = async () => {
+  const handleProviderCheck = () => {
     if (!provider) {
       uiConsole("Provider not initialized yet");
-      return;
+      return false;
     }
+    return true;
+  };
+
+  const createSchema = async () => {
+    if (!handleProviderCheck()) return;
 
     const ethereumRPC = new EthereumRPC(provider);
     const signClient = new SignClient(ethereumRPC.walletClient);
-    uiConsole("Creating Schema...");
 
+    uiConsole("Creating Schema...");
     const schemaId = "VoteAndDonationSchema";
     const schemaData = [
       { name: "user", type: "string" },
@@ -101,66 +91,58 @@ const Signature: React.FC = () => {
       const response = await signClient.createSchema(schemaId, schemaData);
       uiConsole({ schemaId: response.schemaId, message: response.message });
     } catch (error) {
-      console.error("Error creating schema:", error);
       uiConsole({ error: "Schema creation failed", details: error.message });
     }
   };
 
   const createAttestation = async () => {
-    if (!provider) {
-      uiConsole("Provider not initialized yet");
-      return;
-    }
+    if (!handleProviderCheck()) return;
 
     const ethereumRPC = new EthereumRPC(provider);
     const signClient = new SignClient(ethereumRPC.walletClient);
-    uiConsole("Creating Attestation...");
 
-    const address = await ethereumRPC.getAccount();
-    const response = await signClient.createAttestation(address);
-    uiConsole({ hash: response.txHash, attestationId: response.attestationId });
+    uiConsole("Creating Attestation...");
+    try {
+      const address = await ethereumRPC.getAccount();
+      const response = await signClient.createAttestation(address);
+      uiConsole({ hash: response.txHash, attestationId: response.attestationId });
+    } catch (error) {
+      uiConsole({ error: "Attestation creation failed", details: error.message });
+    }
   };
 
   const fetchAccountAttestations = async () => {
-    if (!provider) {
-      uiConsole("Provider not initialized yet");
-      return;
-    }
+    if (!handleProviderCheck()) return;
 
     const ethereumRPC = new EthereumRPC(provider);
     const signClient = new SignClient(ethereumRPC.walletClient);
-    uiConsole("Fetching Attestation...");
 
-    const address = await ethereumRPC.getAccount();
-    const response = await signClient.fetchAccountAttestations(address);
-    uiConsole(response);
+    uiConsole("Fetching Attestation...");
+    try {
+      const address = await ethereumRPC.getAccount();
+      const response = await signClient.fetchAccountAttestations(address);
+      uiConsole(response);
+    } catch (error) {
+      uiConsole({ error: "Failed to fetch attestations", details: error.message });
+    }
   };
 
   const fetchSchemaListFromIndexService = async () => {
-    if (!provider) {
-      uiConsole("Provider not initialized yet");
-      return;
-    }
+    if (!handleProviderCheck()) return;
 
     const indexService = new IndexService('testnet');
     uiConsole("Fetching Schema List...");
 
     try {
       const response = await indexService.querySchemaList({ page: 1 });
-      console.log(response)
       uiConsole({ success: true, total: response?.total, size: response?.size, schemaList: response.schemaList });
     } catch (error) {
-    //   uiConsole({ success: false, message: "Failed to fetch schema list", error: error.message });
-        uiConsole({ success: false, message: "Failed to fetch schema list"});
-
+      uiConsole({ success: false, message: "Failed to fetch schema list" });
     }
   };
 
   const fetchSchemaFromIndexService = async (schemaId: string) => {
-    if (!provider) {
-      uiConsole("Provider not initialized yet");
-      return;
-    }
+    if (!handleProviderCheck()) return;
 
     const indexService = new IndexService('testnet');
     uiConsole("Fetching Schema...");
@@ -169,36 +151,26 @@ const Signature: React.FC = () => {
       const response = await indexService.querySchema(schemaId);
       uiConsole({ success: true, schema: response.schema });
     } catch (error) {
-    //   uiConsole({ success: false, message: "Failed to fetch schema", error: error.message });
       uiConsole({ success: false, message: "Failed to fetch schema" });
-
     }
   };
 
   const fetchAttestationListFromIndexService = async () => {
-    if (!provider) {
-      uiConsole("Provider not initialized yet");
-      return;
-    }
+    if (!handleProviderCheck()) return;
 
     const indexService = new IndexService('testnet');
     uiConsole("Fetching Attestation List...");
 
     try {
-      const response = await indexServices.queryAttestationList({ page: 1 });
-      console.log(response)
-      uiConsole({ success: true, total:response?.total, size: response?.size, attestationList: response.attestationList });
+      const response = await indexService.queryAttestationList({ page: 1 });
+      uiConsole({ success: true, total: response?.total, size: response?.size, attestationList: response.attestationList });
     } catch (error) {
-    //   uiConsole({ success: false, message: "Failed to fetch attestation list", error: error.message });
-    uiConsole({ success: false, message: "Failed to fetch attestation list" });
+      uiConsole({ success: false, message: "Failed to fetch attestation list" });
     }
   };
 
   const fetchAttestationFromIndexService = async (attestationId: string) => {
-    if (!provider) {
-      uiConsole("Provider not initialized yet");
-      return;
-    }
+    if (!handleProviderCheck()) return;
 
     const indexService = new IndexService('testnet');
     uiConsole("Fetching Attestation...");
@@ -207,70 +179,20 @@ const Signature: React.FC = () => {
       const response = await indexService.queryAttestation(attestationId);
       uiConsole({ success: true, attestation: response.attestation });
     } catch (error) {
-    //   uiConsole({ success: false, message: "Failed to fetch attestation", error: error.message });
-    uiConsole({ success: false, message: "Failed to fetch attestation" });
-
+      uiConsole({ success: false, message: "Failed to fetch attestation" });
     }
   };
 
-const loggedInView = (
+  const loggedInView = (
     <>
       <div style={styles.buttonContainer}>
-        {/* <button onClick={() => {
-            createAttestation();
-          }}  
-          style={styles.card}>
-          Create attestation
-        </button> */}
-
-        <button onClick={() => {
-            fetchAccountAttestations();
-          }}  
-          style={styles.card}>
-          Fetch attestations
-        </button>
-
-
-        {/* <button onClick={() => {
-            createSchema();
-          }}  
-          style={styles.card}>
-          Create schema
-        </button> */}
-
-        <button onClick={() => {
-            fetchSchemaListFromIndexService();
-          }}  
-          style={styles.card}>
-        Fetch Schema List From Index Service
-        </button>
-
-        <button onClick={() => {
-            fetchSchemaFromIndexService();
-          }}  
-          style={styles.card}>
-          Fetch Schema From Index Service
-        </button>
-
-        <button onClick={() => {
-            fetchAttestationListFromIndexService();
-          }}  
-          style={styles.card}>
-        Fetch Attestation List From Index Service
-        </button>
-
-        <button onClick={() => {
-            fetchAttestationFromIndexService();
-          }}  
-          style={styles.card}>
-        Fetch Attestation From Index Service
-        </button>
-
+        <button onClick={fetchAccountAttestations} style={styles.card}>Fetch Attestations</button>
+        <button onClick={fetchSchemaListFromIndexService} style={styles.card}>Fetch Schema List From Index Service</button>
+        <button onClick={fetchSchemaFromIndexService} style={styles.card}>Fetch Schema From Index Service</button>
+        <button onClick={fetchAttestationListFromIndexService} style={styles.card}>Fetch Attestation List From Index Service</button>
+        <button onClick={fetchAttestationFromIndexService} style={styles.card}>Fetch Attestation From Index Service</button>
       </div>
-      {/* <Vote refreshCandidates={refreshCandidates} /> */}
-      <div id="console" style={{ whiteSpace: "pre-line" }}>
-        <p style={{ whiteSpace: "pre-line" }}></p>
-      </div>
+      <div id="console" style={{ whiteSpace: "pre-line" }}></div>
     </>
   );
 
